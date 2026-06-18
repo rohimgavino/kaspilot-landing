@@ -31,15 +31,15 @@ class NumberedCanvas(canvas.Canvas):
         self.setFillColor(HexColor("#4f46e5")) # Warna Indigo
         
         # Header Text
-        self.drawString(54, 755, "PANDUAN INSTALASI KASPILOT")
+        self.drawString(54, 795, "PANDUAN INSTALASI KASPILOT")
         self.setFont("Helvetica", 8)
         self.setFillColor(HexColor("#64748b")) # Slate gray
-        self.drawRightString(541, 755, "Edisi Integrasi AI")
+        self.drawRightString(541, 795, "Edisi Integrasi AI")
         
         # Header Line
         self.setStrokeColor(HexColor("#e2e8f0"))
         self.setLineWidth(0.75)
-        self.line(54, 747, 541, 747)
+        self.line(54, 787, 541, 787)
         
         # Footer Line
         self.line(54, 55, 541, 55)
@@ -51,13 +51,13 @@ class NumberedCanvas(canvas.Canvas):
         self.restoreState()
 
 def build_pdf(filename="Panduan_Instalasi_KasPilot.pdf"):
-    # Margins: 0.75 inch (54 pt) kiri-kanan, 1 inch (72 pt) atas-bawah
+    # Margins: 0.75 inch (54 pt) kiri-kanan, top margin 85 pt (untuk menghindari bentrok header), bottom 72 pt
     doc = SimpleDocTemplate(
         filename,
         pagesize=A4,
         leftMargin=54,
         rightMargin=54,
-        topMargin=72,
+        topMargin=85,
         bottomMargin=72
     )
 
