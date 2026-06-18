@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KasPilot - Catat Keuangan Otomatis via Bot Telegram & Google Sheets</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #030712;
+            --bg-surface: rgba(17, 24, 39, 0.7);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.15);
+            --accent-green: #10b981;
+            --accent-green-glow: rgba(16, 185, 129, 0.15);
+            --font-head: 'Outfit', sans-serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at top, #111827 0%, #030712 60%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header / Navbar */
+        header {
+            padding: 24px 0;
+            border-bottom: 1px solid var(--border-color);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: rgba(3, 7, 18, 0.8);
+        }
+
+        .nav-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: var(--font-head);
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #a5b4fc, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-cta-nav {
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
+
+        .btn-cta-nav:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 80px 0 100px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .badge-new {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .hero-title {
+            font-family: var(--font-head);
+            font-size: clamp(32px, 5vw, 56px);
+            line-height: 1.15;
+            font-weight: 800;
+            max-width: 900px;
+            margin: 0 auto 24px auto;
+            background: linear-gradient(to right, #ffffff, #9ca3af);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            font-size: clamp(16px, 2vw, 19px);
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 40px auto;
+        }
+
+        .hero-actions {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 60px;
+        }
+
+        .btn-primary {
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px var(--accent-green-glow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.35);
+        }
+
+        .btn-secondary {
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Mockup Preview */
+        .mockup-container {
+            max-width: 950px;
+            margin: 0 auto;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 40px rgba(99, 102, 241, 0.1);
+        }
+
+        .mockup-header {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 12px;
+            padding-left: 8px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        .dot-red { background-color: #ef4444; }
+        .dot-yellow { background-color: #f59e0b; }
+        .dot-green { background-color: #10b981; }
+
+        .mockup-img {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            display: block;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 0;
+            background-color: rgba(3, 7, 18, 0.5);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .section-head {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-tag {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .section-title {
+            font-family: var(--font-head);
+            font-size: clamp(28px, 4vw, 40px);
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+
+        .section-desc {
+            font-size: 16px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .feature-card {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            padding: 32px;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.03), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(99, 102, 241, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 24px;
+            color: #818cf8;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .feature-title {
+            font-family: var(--font-head);
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .feature-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* How It Works Section */
+        .how-it-works {
+            padding: 100px 0;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .steps-container {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .step-row {
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+        }
+
+        .step-number {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px var(--primary-glow);
+        }
+
+        .step-content {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            padding: 24px 32px;
+            border-radius: 16px;
+            flex-grow: 1;
+        }
+
+        .step-title {
+            font-family: var(--font-head);
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .step-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Pricing Section */
+        .pricing {
+            padding: 100px 0;
+            background-color: rgba(3, 7, 18, 0.5);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .pricing-card {
+            max-width: 450px;
+            margin: 0 auto;
+            background: linear-gradient(145deg, rgba(17, 24, 39, 0.9) 0%, rgba(10, 15, 30, 0.95) 100%);
+            border: 2px solid rgba(99, 102, 241, 0.4);
+            padding: 48px 40px;
+            border-radius: 24px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(99, 102, 241, 0.15);
+            position: relative;
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: -16px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            color: white;
+            padding: 6px 20px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.4);
+        }
+
+        .price-title {
+            font-family: var(--font-head);
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .price-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+
+        .price-val {
+            margin-bottom: 32px;
+        }
+
+        .price-original {
+            text-decoration: line-through;
+            color: #ef4444;
+            font-size: 18px;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        .price-discount {
+            font-family: var(--font-head);
+            font-size: 48px;
+            font-weight: 800;
+            color: white;
+        }
+
+        .price-period {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .features-list {
+            text-align: left;
+            margin-bottom: 40px;
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .features-list li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .features-list li::before {
+            content: "✓";
+            color: var(--accent-green);
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .btn-pricing-cta {
+            width: 100%;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-pricing-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.45);
+        }
+
+        /* FAQ Section */
+        .faq {
+            padding: 100px 0;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .faq-item {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: border-color 0.3s;
+        }
+
+        .faq-question {
+            padding: 20px 24px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 15px;
+            user-select: none;
+        }
+
+        .faq-answer {
+            padding: 0 24px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+            color: var(--text-secondary);
+            font-size: 14px;
+            border-top: 0 solid transparent;
+        }
+
+        .faq-item.active {
+            border-color: rgba(99, 102, 241, 0.4);
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 20px 24px;
+            max-height: 300px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .faq-arrow {
+            transition: transform 0.3s;
+            display: inline-block;
+        }
+
+        .faq-item.active .faq-arrow {
+            transform: rotate(185deg);
+        }
+
+        /* Footer */
+        footer {
+            padding: 60px 0;
+            border-top: 1px solid var(--border-color);
+            background-color: #020617;
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .footer-logo {
+            font-family: var(--font-head);
+            font-size: 20px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 16px;
+        }
+
+        .footer-copyright {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 768px) {
+            .step-row {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .step-number {
+                margin-bottom: 8px;
+            }
+            .hero {
+                padding: 60px 0 80px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <div class="container nav-wrapper">
+            <div class="logo">
+                🚀 KasPilot
+            </div>
+            <!-- Ganti href dengan link chat WhatsApp Anda untuk menerima pesanan -->
+            <a href="https://wa.me/6281234567890?text=Halo%20saya%20tertarik%20membeli%20bot%20KasPilot" class="btn-cta-nav" target="_blank">Beli Sekarang</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="badge-new">
+                ✨ Update 2026: Terintegrasi AI (Gemini & Groq)
+            </div>
+            <h1 class="hero-title">Catat Transaksi Bulanan Semudah Chat di Telegram!</h1>
+            <p class="hero-desc">Lupakan spreadsheet yang rumit dan aplikasi keuangan yang membingungkan. Catat transaksi lewat ketikan biasa, kirim Voice Note, atau foto struk belanjaan. Dashboard visual terupdate otomatis secara real-time.</p>
+            <div class="hero-actions">
+                <a href="https://wa.me/6281234567890?text=Halo%20saya%20tertarik%20membeli%20bot%20KasPilot" class="btn-primary" target="_blank">Dapatkan Akses Instan</a>
+                <a href="#fitur" class="btn-secondary">Pelajari Fitur</a>
+            </div>
+
+            <!-- Preview Dashboard Mockup -->
+            <div class="mockup-container">
+                <div class="mockup-header">
+                    <div class="dot dot-red"></div>
+                    <div class="dot dot-yellow"></div>
+                    <div class="dot dot-green"></div>
+                </div>
+                <img src="dashboard_mockup.jpg" alt="KasPilot Dashboard Mockup Preview" class="mockup-img">
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="fitur">
+        <div class="container">
+            <div class="section-head">
+                <span class="section-tag">Fitur Unggulan</span>
+                <h2 class="section-title">Semua yang Anda Butuhkan untuk Mengatur Kas</h2>
+                <p class="section-desc">KasPilot dirancang khusus untuk memotong kerumitan mencatat arus kas pribadi, rumah tangga, hingga bisnis mikro.</p>
+            </div>
+
+            <div class="features-grid">
+                <!-- Feature 1 -->
+                <div class="feature-card">
+                    <div class="feature-icon">🎙️</div>
+                    <h3 class="feature-title">Catat Lewat Suara (Voice Note)</h3>
+                    <p class="feature-desc">Cukup kirim pesan suara seperti "Beli kopi dua puluh lima ribu rupiah". AI Whisper akan mengubahnya menjadi tulisan dan mencatat nominalnya instan.</p>
+                </div>
+                <!-- Feature 2 -->
+                <div class="feature-card">
+                    <div class="feature-icon">📸</div>
+                    <h3 class="feature-title">Scan Struk Belanja dengan AI</h3>
+                    <p class="feature-desc">Kirim foto struk belanja, nota warung, atau slip transfer bank. AI Gemini/Groq akan membaca nominal total secara otomatis tanpa perlu diketik.</p>
+                </div>
+                <!-- Feature 3 -->
+                <div class="feature-card">
+                    <div class="feature-icon">💼</div>
+                    <h3 class="feature-title">Pisahkan Dompet Keluarga & Usaha</h3>
+                    <p class="feature-desc">Kelola dua kas sekaligus dalam satu sistem. Pisahkan pengeluaran rumah tangga dengan modal usaha kecil Anda tanpa tercampur.</p>
+                </div>
+                <!-- Feature 4 -->
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3 class="feature-title">Dashboard Visual Dark Mode</h3>
+                    <p class="feature-desc">Akses visualisasi grafik mingguan/bulanan, rincian kategori pengeluaran terpopuler, dan edit/hapus riwayat transaksi secara langsung di browser.</p>
+                </div>
+                <!-- Feature 5 -->
+                <div class="feature-card">
+                    <div class="feature-icon">⏰</div>
+                    <h3 class="feature-title">Pengingat Tagihan Otomatis</h3>
+                    <p class="feature-desc">Atur tanggal jatuh tempo tagihan bulanan (listrik, wifi, kontrak rumah). Bot akan mengirimkan chat pengingat pada H-1 agar Anda tidak lupa.</p>
+                </div>
+                <!-- Feature 6 -->
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3 class="feature-title">Target Tabungan Impian</h3>
+                    <p class="feature-desc">Miliki target finansial yang terarah. Atur target tabungan impian dan lakukan top-up saldo tabungan langsung melalui obrolan bot.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works">
+        <div class="container">
+            <div class="section-head">
+                <span class="section-tag">Cara Kerja</span>
+                <h2 class="section-title">Setup Instan Kurang Dari 3 Menit</h2>
+                <p class="section-desc">Tidak butuh hosting, tidak butuh pengetahuan coding. Anda hanya menyalin dokumen yang kami berikan.</p>
+            </div>
+
+            <div class="steps-container">
+                <!-- Step 1 -->
+                <div class="step-row">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Salin Template Spreadsheet</h3>
+                        <p class="step-desc">Buka link Google Spreadsheet master yang kami kirimkan, klik **File > Make a copy (Buat salinan)** untuk menyalin template bersih ke Google Drive pribadi Anda.</p>
+                    </div>
+                </div>
+                <!-- Step 2 -->
+                <div class="step-row">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Deploy Web App</h3>
+                        <p class="step-desc">Buka menu Apps Script yang tersemat otomatis pada spreadsheet baru Anda, klik tombol **Deploy > New deployment** sebagai Web App hanya dalam hitungan detik.</p>
+                    </div>
+                </div>
+                <!-- Step 3 -->
+                <div class="step-row">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Setup via Wizard & Mulai Catat!</h3>
+                        <p class="step-desc">Buka halaman setup interaktif untuk memasukkan PIN dashboard dan token Telegram. Hubungkan bot Anda dan mulailah mengirimkan catatan pertama Anda!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing">
+        <div class="container">
+            <div class="section-head">
+                <span class="section-tag">Harga Spesial</span>
+                <h2 class="section-title">Penawaran Sekali Bayar, Gunakan Selamanya</h2>
+                <p class="section-desc">Tanpa biaya langganan bulanan. Miliki seumur hidup sistem pencatatan keuangan premium ini di Google Drive Anda.</p>
+            </div>
+
+            <div class="pricing-card">
+                <span class="pricing-badge">PROMO TERBATAS</span>
+                <h3 class="price-title">KasPilot Master Template</h3>
+                <p class="price-desc">Akses penuh ke Spreadsheet Master, script bot otomatis, dashboard premium, dan panduan setup langkah-demi-langkah.</p>
+                <div class="price-val">
+                    <span class="price-original">Rp299.000</span>
+                    <span class="price-discount">Rp99.000</span>
+                    <span class="price-period">/ sekali bayar</span>
+                </div>
+                <ul class="features-list">
+                    <li>Semua File Script Bot Telegram Aktif</li>
+                    <li>Spreadsheet Template & Log Error</li>
+                    <li>Dashboard Visual Premium Terintegrasi</li>
+                    <li>Mendukung Input Teks, Voice Note, & Foto</li>
+                    <li>Sistem Multi-User (Keluarga & Usaha)</li>
+                    <li>Panduan Instalasi Lengkap (PDF & Video)</li>
+                    <li>Lisensi Penggunaan Selamanya (Lifetime)</li>
+                </ul>
+                <!-- Ganti link dengan chat WhatsApp Anda untuk menerima pesanan -->
+                <a href="https://wa.me/6281234567890?text=Halo%20saya%20ingin%20membeli%20bot%20KasPilot%20promo%2099rb" class="btn-pricing-cta" target="_blank">Miliki Sekarang Juga</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq">
+        <div class="container">
+            <div class="section-head">
+                <span class="section-tag">Tanya Jawab</span>
+                <h2 class="section-title">Pertanyaan yang Sering Diajukan</h2>
+                <p class="section-desc">Masih ragu? Berikut adalah beberapa jawaban atas pertanyaan yang paling sering diajukan calon pengguna.</p>
+            </div>
+
+            <div class="faq-container">
+                <!-- FAQ 1 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Apakah data keuangan saya aman?</span>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Ya, 100% aman. Data keuangan Anda tersimpan langsung di akun Google Drive pribadi Anda sendiri (melalui Google Spreadsheet). Kami selaku penjual sama sekali tidak mempunyai akses ke data ataupun riwayat transaksi Anda.
+                    </div>
+                </div>
+                <!-- FAQ 2 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Apakah saya perlu membayar biaya bulanan?</span>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Tidak. Template ini bersistem sekali bayar saja (one-time payment). Tidak ada biaya bulanan. Anda meng-host skripnya sendiri di layanan gratis Google Apps Script milik Anda seumur hidup.
+                    </div>
+                </div>
+                <!-- FAQ 3 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Bagaimana cara kerja fitur Scan Struk & Suara dengan AI?</span>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Bot ini terintegrasi dengan API Key Gemini (dari Google) atau Groq. Anda hanya perlu membuat API Key gratis pada platform penyedia AI tersebut, lalu menempelkannya di Setup Wizard. Panduan lengkap cara mendapatkan API Key gratis sudah kami sediakan di dalam paket pembelian.
+                    </div>
+                </div>
+                <!-- FAQ 4 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Apakah orang awam bisa memasangnya sendiri?</span>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Sangat bisa. Kami telah mendesain Setup Wizard interaktif yang membimbing Anda mengisi parameter. Anda hanya perlu mengikuti petunjuk teks dan video panduan kami yang berdurasi kurang dari 3 menit.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer>
+        <div class="container">
+            <div class="footer-logo">🚀 KasPilot</div>
+            <p>Solusi pencatatan keuangan pribadi dan bisnis mikro modern, praktis, dan otomatis.</p>
+            <div class="footer-copyright">
+                &copy; 2026 KasPilot. Hak Cipta Dilindungi Undang-Undang.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // FAQ Accordion functionality
+        const faqItems = document.querySelectorAll('.faq-item');
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            question.addEventListener('click', () => {
+                const isActive = item.classList.contains('active');
+                
+                // Close all other items
+                faqItems.forEach(otherItem => {
+                    otherItem.classList.remove('active');
+                });
+
+                if (!isActive) {
+                    item.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
