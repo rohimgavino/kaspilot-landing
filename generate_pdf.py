@@ -68,8 +68,8 @@ def build_pdf(filename="Panduan_Instalasi_KasPilot.pdf"):
         'CoverTitle',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=30,
-        leading=36,
+        fontSize=26,
+        leading=32,
         textColor=HexColor("#1e1b4b"), # Deep Indigo
         alignment=1, # Center
         spaceAfter=15
@@ -79,8 +79,8 @@ def build_pdf(filename="Panduan_Instalasi_KasPilot.pdf"):
         'CoverSubtitle',
         parent=styles['Normal'],
         fontName='Helvetica',
-        fontSize=12,
-        leading=16,
+        fontSize=11,
+        leading=15,
         textColor=HexColor("#4f46e5"), # Indigo
         alignment=1,
         spaceAfter=30
@@ -90,10 +90,10 @@ def build_pdf(filename="Panduan_Instalasi_KasPilot.pdf"):
         'Heading1_Custom',
         parent=styles['Heading1'],
         fontName='Helvetica-Bold',
-        fontSize=18,
-        leading=22,
+        fontSize=16,
+        leading=20,
         textColor=HexColor("#1e1b4b"),
-        spaceBefore=15,
+        spaceBefore=16,
         spaceAfter=10,
         keepWithNext=True
     )
@@ -102,8 +102,8 @@ def build_pdf(filename="Panduan_Instalasi_KasPilot.pdf"):
         'Heading2_Custom',
         parent=styles['Heading2'],
         fontName='Helvetica-Bold',
-        fontSize=13,
-        leading=17,
+        fontSize=12,
+        leading=16,
         textColor=HexColor("#4f46e5"),
         spaceBefore=12,
         spaceAfter=6,
@@ -115,7 +115,7 @@ def build_pdf(filename="Panduan_Instalasi_KasPilot.pdf"):
         parent=styles['BodyText'],
         fontName='Helvetica',
         fontSize=9.5,
-        leading=14,
+        leading=14.5,
         textColor=HexColor("#334155"), # Slate-700
         spaceBefore=4,
         spaceAfter=6
@@ -126,22 +126,16 @@ def build_pdf(filename="Panduan_Instalasi_KasPilot.pdf"):
         parent=body_style,
         leftIndent=15,
         bulletIndent=5,
-        spaceAfter=4
+        spaceAfter=5
     )
     
-    code_style = ParagraphStyle(
-        'Code_Custom',
-        parent=styles['Code'],
+    code_text_style = ParagraphStyle(
+        'CodeText',
+        parent=styles['Normal'],
         fontName='Courier',
         fontSize=8.5,
         leading=11,
-        textColor=HexColor("#0f172a"),
-        backColor=HexColor("#f8fafc"),
-        borderColor=HexColor("#cbd5e1"),
-        borderWidth=0.5,
-        borderPadding=8,
-        spaceBefore=6,
-        spaceAfter=8
+        textColor=HexColor("#0f172a")
     )
 
     warning_style = ParagraphStyle(
@@ -155,17 +149,19 @@ def build_pdf(filename="Panduan_Instalasi_KasPilot.pdf"):
     # ----------------------------------------------------
     # HALAMAN 1: COVER PAGE
     # ----------------------------------------------------
-    story.append(Spacer(1, 100))
-    story.append(Paragraph("🚀 KASPILOT", subtitle_style))
+    story.append(Spacer(1, 40))
+    story.append(Paragraph("🚀 KASPILOT SYSTEM", subtitle_style))
     story.append(Paragraph("PANDUAN INSTALASI & SETUP", title_style))
     story.append(Paragraph("Sistem Catat Keuangan Otomatis via Bot Telegram & Google Sheets", subtitle_style))
-    story.append(Spacer(1, 20))
+    story.append(Spacer(1, 10))
     
-    # Overview Image on Cover
+    # Overview Image on Cover (Centered)
     if os.path.exists("overview.jpg"):
-        story.append(Image("overview.jpg", width=420, height=236))
+        img_overview = Image("overview.jpg", width=380, height=214)
+        img_overview.hAlign = 'CENTER'
+        story.append(img_overview)
     
-    story.append(Spacer(1, 80))
+    story.append(Spacer(1, 50))
     
     meta_style = ParagraphStyle(
         'Meta',
@@ -193,22 +189,23 @@ def build_pdf(filename="Panduan_Instalasi_KasPilot.pdf"):
     story.append(Paragraph("&bull; <b>Token Bot Telegram</b> (didapatkan gratis dari @BotFather).", bullet_style))
     story.append(Paragraph("&bull; <b>API Key Gemini / Groq</b> (opsional, jika Anda ingin mengaktifkan fitur catat via pesan suara / scan foto struk).", bullet_style))
     
-    # Warning Box
+    # Warning Box (Centered table, padded width)
     warning_content = [
         [Paragraph("⚠️ <b>PENTING: JANGAN BAGIKAN TOKEN BOT ANDA!</b><br/>"
                    "Token Telegram Bot dan PIN Dashboard Anda adalah kunci keamanan data keuangan Anda. "
-                   "Jangan pernah membagikan informasi ini kepada siapa pun.", warning_style)]
+                   "Jangan pernah membagikan informasi ini kepada siapa pun demi menjaga privasi data kas.", warning_style)]
     ]
-    warning_table = Table(warning_content, colWidths=[480])
+    warning_table = Table(warning_content, colWidths=[460])
     warning_table.setStyle(TableStyle([
         ('BACKGROUND', (0,0), (-1,-1), HexColor("#fef2f2")),
         ('BOX', (0,0), (-1,-1), 1, HexColor("#fee2e2")),
         ('PADDING', (0,0), (-1,-1), 12),
         ('BOTTOMPADDING', (0,0), (-1,-1), 12),
     ]))
+    warning_table.hAlign = 'CENTER'
     story.append(Spacer(1, 15))
     story.append(warning_table)
-    story.append(Spacer(1, 20))
+    story.append(PageBreak())
     
     # ----------------------------------------------------
     # HALAMAN 3: LANGKAH 1 - MENYALIN SPREADSHEET
@@ -224,11 +221,22 @@ def build_pdf(filename="Panduan_Instalasi_KasPilot.pdf"):
     story.append(Paragraph("4. Tunggu beberapa saat sampai tab spreadsheet salinan baru Anda terbuka sepenuhnya.", bullet_style))
     story.append(Paragraph("5. <b>Salin Spreadsheet ID Anda</b>. ID ini terdapat di URL browser Anda, di antara huruf <i>/d/</i> dan <i>/edit</i>.", bullet_style))
     
-    story.append(Paragraph("Contoh cara membaca Spreadsheet ID:", h2_style))
-    story.append(Paragraph(
-        "Jika URL browser Anda adalah:<br/>"
-        "<code>https://docs.google.com/spreadsheets/d/<b>1A2b3C4d5E6f7G8h9I0J_kLMnOpQrStUvWxYz</b>/edit#gid=0</code><br/>"
-        "Maka ID Spreadsheet Anda adalah bagian yang dicetak tebal: <code>1A2b3C4d5E6f7G8h9I0J_kLMnOpQrStUvWxYz</code>", code_style))
+    # Code Block Table
+    code_content = [
+        [Paragraph("Jika URL browser Anda adalah:<br/>"
+                   "<code>https://docs.google.com/spreadsheets/d/<b>1A2b3C4d5E6f7G8h9I0J_kLMnOpQrStUvWxYz</b>/edit#gid=0</code><br/><br/>"
+                   "Maka ID Spreadsheet Anda adalah bagian yang dicetak tebal:<br/>"
+                   "<code>1A2b3C4d5E6f7G8h9I0J_kLMnOpQrStUvWxYz</code>", code_text_style)]
+    ]
+    code_table = Table(code_content, colWidths=[460])
+    code_table.setStyle(TableStyle([
+        ('BACKGROUND', (0,0), (-1,-1), HexColor("#f8fafc")),
+        ('BOX', (0,0), (-1,-1), 0.5, HexColor("#cbd5e1")),
+        ('PADDING', (0,0), (-1,-1), 10),
+    ]))
+    code_table.hAlign = 'CENTER'
+    story.append(Spacer(1, 10))
+    story.append(code_table)
     story.append(PageBreak())
 
     # ----------------------------------------------------
@@ -274,10 +282,12 @@ def build_pdf(filename="Panduan_Instalasi_KasPilot.pdf"):
     story.append(Paragraph("5. Klik tombol <b>Set Webhook</b> untuk menghubungkan bot Telegram Anda dengan script Google.", bullet_style))
     story.append(Paragraph("6. Terakhir, klik <b>Cek Setup</b> untuk memastikan status integrasi sukses (berwarna hijau).", bullet_style))
     
-    # Setup Image
+    # Setup Image (Centered)
     if os.path.exists("setup_wizard.jpg"):
         story.append(Spacer(1, 10))
-        story.append(Image("setup_wizard.jpg", width=420, height=236))
+        img_setup = Image("setup_wizard.jpg", width=380, height=214)
+        img_setup.hAlign = 'CENTER'
+        story.append(img_setup)
     
     story.append(PageBreak())
 
@@ -290,20 +300,21 @@ def build_pdf(filename="Panduan_Instalasi_KasPilot.pdf"):
         "dan Anda dapat segera melakukan pencatatan keuangan.", body_style))
     
     story.append(Paragraph("Format Pencatatan Chat Telegram:", h2_style))
-    story.append(Paragraph("&bull; <b>Pencatatan Manual Teks</b>:<br/>"
-                           "Cukup ketik: <code>Beli bakso 25.000 makanan usaha</code> atau <code>Gaji bulanan 5.000.000 masuk keluarga</code>.<br/>"
-                           "Sistem otomatis mendeteksi Nominal, Deskripsi, Kategori, dan jenis Kas (Keluarga/Usaha).", bullet_style))
-    story.append(Paragraph("&bull; <b>Pencatatan Voice Note (Suara)</b>:<br/>"
-                           "Tekan tombol rekam suara di Telegram, dan ucapkan dengan natural, misal: <i>'Beli bensin motor dua puluh ribu rupiah dompet usaha'</i>.", bullet_style))
-    story.append(Paragraph("&bull; <b>Pencatatan Foto Struk</b>:<br/>"
-                           "Ambil foto struk belanjaan supermarket atau slip transfer bank, kirim foto tersebut ke chat bot, dan AI akan membaca nominal total secara otomatis.", bullet_style))
+    story.append(Paragraph("&bull; <b>Pencatatan Manual Teks</b>: "
+                           "Ketik: <code>Beli bakso 25.000 makanan usaha</code> atau <code>Gaji bulanan 5.000.000 masuk keluarga</code>.", bullet_style))
+    story.append(Paragraph("&bull; <b>Pencatatan Voice Note (Suara)</b>: "
+                           "Kirim pesan suara secara natural, misal: <i>'Beli bensin motor dua puluh ribu rupiah dompet usaha'</i>.", bullet_style))
+    story.append(Paragraph("&bull; <b>Pencatatan Foto Struk</b>: "
+                           "Kirim foto struk belanjaan supermarket atau slip transfer bank, dan AI akan membaca nominal total secara otomatis.", bullet_style))
     
-    # Dashboard Mockup Preview
+    # Dashboard Mockup Preview (Centered)
     if os.path.exists("dashboard_mockup.jpg"):
         story.append(Spacer(1, 10))
-        story.append(Image("dashboard_mockup.jpg", width=420, height=230))
+        img_mockup = Image("dashboard_mockup.jpg", width=380, height=200)
+        img_mockup.hAlign = 'CENTER'
+        story.append(img_mockup)
     
-    story.append(Spacer(1, 15))
+    story.append(Spacer(1, 12))
     story.append(Paragraph("Hubungi Layanan Support jika Anda mengalami kesulitan dalam proses instalasi ini. Selamat mencatat keuangan dengan cerdas!", body_style))
     
     doc.build(story, canvasmaker=NumberedCanvas)
