@@ -20,21 +20,26 @@ Halaman ini didesain modern menggunakan konsep *dark mode* futuristik, transisi 
 
 ## 🛠️ Cara Menyesuaikan Landing Page
 
-Untuk mengubah tautan pemesanan WhatsApp agar langsung masuk ke nomor Anda sendiri:
+Untuk mengubah tautan pemesanan WhatsApp, admin, dan template spreadsheet:
 
 1. Buka berkas `index.html`.
-2. Cari bagian tombol CTA (Gunakan `Ctrl + F` dan cari kata kunci `wa.me`).
-3. Ubah nomor WhatsApp `6281234567890` dengan nomor Anda sendiri (gunakan format kode negara, misal `628xxxxxxxxxx` tanpa angka `0` di depan).
-4. Sesuaikan pesan pembuka otomatis di belakang teks `?text=...` sesuai keinginan Anda.
+2. Cari blok `ADMIN_SETTINGS` di bagian bawah file.
+3. Ubah `whatsappNumber` dengan nomor admin Anda sendiri. Gunakan format kode negara, misal `628xxxxxxxxxx` tanpa angka `0` di depan.
+4. Ubah `adminName` jika ingin mengganti nama admin.
+5. Ubah `spreadsheetTemplateCopyUrl` jika link template master berubah.
 
-Contoh baris kode yang perlu diubah (terdapat di tombol navigasi atas, hero section, dan pricing card):
-```html
-<!-- Sebelum -->
-<a href="https://wa.me/6281234567890?text=Halo%20saya%20tertarik%20membeli%20bot%20KasPilot" class="btn-cta-nav" target="_blank">Beli Sekarang</a>
-
-<!-- Sesudah (Misal nomor Anda 085712345678) -->
-<a href="https://wa.me/6285712345678?text=Halo%20saya%20ingin%20membeli%20bot%20KasPilot" class="btn-cta-nav" target="_blank">Beli Sekarang</a>
+Contoh blok konfigurasi:
+```js
+const ADMIN_SETTINGS = {
+  whatsappNumber: "6285712345678",
+  adminName: "Admin KasPilot",
+  spreadsheetTemplateCopyUrl: "https://docs.google.com/spreadsheets/d/ID_SPREADSHEET/copy",
+  spreadsheetTemplateEditUrl: "https://docs.google.com/spreadsheets/d/ID_SPREADSHEET/edit"
+};
 ```
+
+Link Make a Copy template saat ini:
+[Buka Template KasPilot](https://docs.google.com/spreadsheets/d/1VErcdQ0N2BKTbmLO4OJatEpmYpuv2q7XAU3t4CsO1Y4/copy)
 
 ---
 

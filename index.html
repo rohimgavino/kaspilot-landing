@@ -326,6 +326,41 @@
             margin: 0 auto;
         }
 
+        .setup-actions {
+            max-width: 800px;
+            margin: 32px auto 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+        }
+
+        .setup-card {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .setup-card strong {
+            display: block;
+            font-family: var(--font-head);
+            font-size: 17px;
+            margin-bottom: 8px;
+        }
+
+        .setup-card p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 18px;
+        }
+
+        .setup-card .btn-secondary,
+        .setup-card .btn-primary {
+            display: inline-block;
+            padding: 12px 18px;
+            font-size: 14px;
+        }
+
         .step-row {
             display: flex;
             gap: 24px;
@@ -593,8 +628,7 @@
             <div class="logo">
                 🚀 KasPilot
             </div>
-            <!-- Ganti href dengan link chat WhatsApp Anda untuk menerima pesanan -->
-            <a href="https://wa.me/6281234567890?text=Halo%20saya%20tertarik%20membeli%20bot%20KasPilot" class="btn-cta-nav" target="_blank">Beli Sekarang</a>
+            <a href="https://wa.me/6281234567890?text=Halo%20saya%20tertarik%20membeli%20bot%20KasPilot" class="btn-cta-nav js-wa-link" data-wa-text="Halo saya tertarik membeli bot KasPilot" target="_blank">Beli Sekarang</a>
         </div>
     </header>
 
@@ -607,7 +641,8 @@
             <h1 class="hero-title">Catat Transaksi Bulanan Semudah Chat di Telegram!</h1>
             <p class="hero-desc">Lupakan spreadsheet yang rumit dan aplikasi keuangan yang membingungkan. Catat transaksi lewat ketikan biasa, kirim Voice Note, atau foto struk belanjaan. Dashboard visual terupdate otomatis secara real-time.</p>
             <div class="hero-actions">
-                <a href="https://wa.me/6281234567890?text=Halo%20saya%20tertarik%20membeli%20bot%20KasPilot" class="btn-primary" target="_blank">Dapatkan Akses Instan</a>
+                <a href="https://wa.me/6281234567890?text=Halo%20saya%20tertarik%20membeli%20bot%20KasPilot" class="btn-primary js-wa-link" data-wa-text="Halo saya tertarik membeli bot KasPilot" target="_blank">Dapatkan Akses Instan</a>
+                <a href="https://docs.google.com/spreadsheets/d/1VErcdQ0N2BKTbmLO4OJatEpmYpuv2q7XAU3t4CsO1Y4/copy" class="btn-secondary js-template-copy-link" target="_blank">Make a Copy Template</a>
                 <a href="#fitur" class="btn-secondary">Pelajari Fitur</a>
             </div>
 
@@ -688,7 +723,7 @@
                     <div class="step-number">1</div>
                     <div class="step-content">
                         <h3 class="step-title">Salin Template Spreadsheet</h3>
-                        <p class="step-desc">Buka link Google Spreadsheet master yang kami kirimkan, klik **File > Make a copy (Buat salinan)** untuk menyalin template bersih ke Google Drive pribadi Anda.</p>
+                        <p class="step-desc">Klik tombol Make a Copy di bawah ini untuk menyalin template bersih ke Google Drive pribadi Anda. Jika Google meminta konfirmasi, pilih Buat salinan.</p>
                     </div>
                 </div>
                 <!-- Step 2 -->
@@ -706,6 +741,19 @@
                         <h3 class="step-title">Setup via Wizard & Mulai Catat!</h3>
                         <p class="step-desc">Buka halaman setup interaktif untuk memasukkan PIN dashboard dan token Telegram. Hubungkan bot Anda dan mulailah mengirimkan catatan pertama Anda!</p>
                     </div>
+                </div>
+            </div>
+
+            <div class="setup-actions">
+                <div class="setup-card">
+                    <strong>Template Spreadsheet</strong>
+                    <p>Gunakan link ini untuk membuat salinan master KasPilot sebelum deploy Apps Script.</p>
+                    <a href="https://docs.google.com/spreadsheets/d/1VErcdQ0N2BKTbmLO4OJatEpmYpuv2q7XAU3t4CsO1Y4/copy" class="btn-primary js-template-copy-link" target="_blank">Buka Make a Copy</a>
+                </div>
+                <div class="setup-card">
+                    <strong>Butuh Bantuan Admin?</strong>
+                    <p>Hubungi admin jika perlu bantuan setup nomor bot, token Telegram, PIN dashboard, atau Spreadsheet ID.</p>
+                    <a href="https://wa.me/6281234567890?text=Halo%20admin%2C%20saya%20butuh%20bantuan%20setup%20KasPilot" class="btn-secondary js-wa-link" data-wa-text="Halo admin, saya butuh bantuan setup KasPilot" target="_blank">Chat Admin</a>
                 </div>
             </div>
         </div>
@@ -739,7 +787,7 @@
                     <li>Lisensi Penggunaan Selamanya (Lifetime)</li>
                 </ul>
                 <!-- Ganti link dengan chat WhatsApp Anda untuk menerima pesanan -->
-                <a href="https://wa.me/6281234567890?text=Halo%20saya%20ingin%20membeli%20bot%20KasPilot%20promo%2099rb" class="btn-pricing-cta" target="_blank">Miliki Sekarang Juga</a>
+                <a href="https://wa.me/6281234567890?text=Halo%20saya%20ingin%20membeli%20bot%20KasPilot%20promo%2099rb" class="btn-pricing-cta js-wa-link" data-wa-text="Halo saya ingin membeli bot KasPilot promo 99rb" target="_blank">Miliki Sekarang Juga</a>
             </div>
         </div>
     </section>
@@ -810,6 +858,28 @@
     </footer>
 
     <script>
+        // Admin settings: ubah nilai di sini untuk mengganti nomor HP, link template, dan identitas admin.
+        const ADMIN_SETTINGS = {
+            whatsappNumber: "6281234567890",
+            adminName: "Admin KasPilot",
+            spreadsheetTemplateCopyUrl: "https://docs.google.com/spreadsheets/d/1VErcdQ0N2BKTbmLO4OJatEpmYpuv2q7XAU3t4CsO1Y4/copy",
+            spreadsheetTemplateEditUrl: "https://docs.google.com/spreadsheets/d/1VErcdQ0N2BKTbmLO4OJatEpmYpuv2q7XAU3t4CsO1Y4/edit?gid=875839274#gid=875839274"
+        };
+
+        function applyAdminSettings() {
+            document.querySelectorAll('.js-wa-link').forEach(link => {
+                const text = link.dataset.waText || "Halo admin, saya tertarik dengan KasPilot";
+                link.href = `https://wa.me/${ADMIN_SETTINGS.whatsappNumber}?text=${encodeURIComponent(text)}`;
+                link.setAttribute('aria-label', `${link.textContent.trim()} via ${ADMIN_SETTINGS.adminName}`);
+            });
+
+            document.querySelectorAll('.js-template-copy-link').forEach(link => {
+                link.href = ADMIN_SETTINGS.spreadsheetTemplateCopyUrl;
+            });
+        }
+
+        applyAdminSettings();
+
         // FAQ Accordion functionality
         const faqItems = document.querySelectorAll('.faq-item');
         faqItems.forEach(item => {
