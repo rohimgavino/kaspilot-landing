@@ -642,7 +642,7 @@
             <p class="hero-desc">Lupakan spreadsheet yang rumit dan aplikasi keuangan yang membingungkan. Catat transaksi lewat ketikan biasa, kirim Voice Note, atau foto struk belanjaan. Dashboard visual terupdate otomatis secara real-time.</p>
             <div class="hero-actions">
                 <a href="https://wa.me/6281234567890?text=Halo%20saya%20tertarik%20membeli%20bot%20KasPilot" class="btn-primary js-wa-link" data-wa-text="Halo saya tertarik membeli bot KasPilot" target="_blank">Dapatkan Akses Instan</a>
-                <a href="https://docs.google.com/spreadsheets/d/1VErcdQ0N2BKTbmLO4OJatEpmYpuv2q7XAU3t4CsO1Y4/copy" class="btn-secondary js-template-copy-link" target="_blank">Make a Copy Template</a>
+                <a href="https://wa.me/6281234567890?text=Halo%20admin%2C%20saya%20sudah%20bayar%20dan%20ingin%20akses%20template%20KasPilot" class="btn-secondary js-wa-link" data-wa-text="Halo admin, saya sudah bayar dan ingin akses template KasPilot" target="_blank">Minta Akses Setelah Bayar</a>
                 <a href="#fitur" class="btn-secondary">Pelajari Fitur</a>
             </div>
 
@@ -722,8 +722,8 @@
                 <div class="step-row">
                     <div class="step-number">1</div>
                     <div class="step-content">
-                        <h3 class="step-title">Salin Template Spreadsheet</h3>
-                        <p class="step-desc">Klik tombol Make a Copy di bawah ini untuk menyalin template bersih ke Google Drive pribadi Anda. Jika Google meminta konfirmasi, pilih Buat salinan.</p>
+                        <h3 class="step-title">Bayar & Terima Link Template</h3>
+                        <p class="step-desc">Setelah pembayaran terkonfirmasi, admin akan mengirim link Make a Copy spreadsheet master KasPilot agar template tetap aman dan tidak tersebar publik.</p>
                     </div>
                 </div>
                 <!-- Step 2 -->
@@ -746,9 +746,9 @@
 
             <div class="setup-actions">
                 <div class="setup-card">
-                    <strong>Template Spreadsheet</strong>
-                    <p>Gunakan link ini untuk membuat salinan master KasPilot sebelum deploy Apps Script.</p>
-                    <a href="https://docs.google.com/spreadsheets/d/1VErcdQ0N2BKTbmLO4OJatEpmYpuv2q7XAU3t4CsO1Y4/copy" class="btn-primary js-template-copy-link" target="_blank">Buka Make a Copy</a>
+                    <strong>Akses Template Setelah Bayar</strong>
+                    <p>Link Make a Copy tidak ditampilkan publik. Kirim bukti pembayaran ke admin, lalu admin akan mengirim link salinan template.</p>
+                    <a href="https://wa.me/6281234567890?text=Halo%20admin%2C%20saya%20sudah%20bayar%20dan%20ingin%20akses%20template%20KasPilot" class="btn-primary js-wa-link" data-wa-text="Halo admin, saya sudah bayar dan ingin akses template KasPilot" target="_blank">Klaim Link Template</a>
                 </div>
                 <div class="setup-card">
                     <strong>Butuh Bantuan Admin?</strong>
@@ -862,6 +862,7 @@
         const ADMIN_SETTINGS = {
             whatsappNumber: "6281234567890",
             adminName: "Admin KasPilot",
+            // Link ini hanya untuk admin. Jangan tampilkan langsung di halaman publik.
             spreadsheetTemplateCopyUrl: "https://docs.google.com/spreadsheets/d/1VErcdQ0N2BKTbmLO4OJatEpmYpuv2q7XAU3t4CsO1Y4/copy",
             spreadsheetTemplateEditUrl: "https://docs.google.com/spreadsheets/d/1VErcdQ0N2BKTbmLO4OJatEpmYpuv2q7XAU3t4CsO1Y4/edit?gid=875839274#gid=875839274"
         };
@@ -871,10 +872,6 @@
                 const text = link.dataset.waText || "Halo admin, saya tertarik dengan KasPilot";
                 link.href = `https://wa.me/${ADMIN_SETTINGS.whatsappNumber}?text=${encodeURIComponent(text)}`;
                 link.setAttribute('aria-label', `${link.textContent.trim()} via ${ADMIN_SETTINGS.adminName}`);
-            });
-
-            document.querySelectorAll('.js-template-copy-link').forEach(link => {
-                link.href = ADMIN_SETTINGS.spreadsheetTemplateCopyUrl;
             });
         }
 

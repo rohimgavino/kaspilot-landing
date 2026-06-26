@@ -20,13 +20,13 @@ Halaman ini didesain modern menggunakan konsep *dark mode* futuristik, transisi 
 
 ## 🛠️ Cara Menyesuaikan Landing Page
 
-Untuk mengubah tautan pemesanan WhatsApp, admin, dan template spreadsheet:
+Untuk mengubah tautan pemesanan WhatsApp, admin, dan template spreadsheet internal:
 
 1. Buka berkas `index.html`.
 2. Cari blok `ADMIN_SETTINGS` di bagian bawah file.
 3. Ubah `whatsappNumber` dengan nomor admin Anda sendiri. Gunakan format kode negara, misal `628xxxxxxxxxx` tanpa angka `0` di depan.
 4. Ubah `adminName` jika ingin mengganti nama admin.
-5. Ubah `spreadsheetTemplateCopyUrl` jika link template master berubah.
+5. Ubah `spreadsheetTemplateCopyUrl` jika link template master berubah. Link ini hanya catatan internal untuk admin dan tidak ditampilkan sebagai tombol publik.
 
 Contoh blok konfigurasi:
 ```js
@@ -38,8 +38,10 @@ const ADMIN_SETTINGS = {
 };
 ```
 
-Link Make a Copy template saat ini:
-[Buka Template KasPilot](https://docs.google.com/spreadsheets/d/1VErcdQ0N2BKTbmLO4OJatEpmYpuv2q7XAU3t4CsO1Y4/copy)
+Alur penjualan yang disarankan:
+1. Calon pembeli klik WhatsApp dari landing page.
+2. Admin mengirim instruksi pembayaran.
+3. Setelah pembayaran terkonfirmasi, admin mengirim link Make a Copy template secara manual.
 
 ---
 
