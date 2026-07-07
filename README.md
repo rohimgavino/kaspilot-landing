@@ -31,6 +31,7 @@ Untuk mengubah tautan pemesanan WhatsApp, harga, metode pembayaran, admin, dan t
 6. Ubah `payment.qris.staticPayload` dengan payload QRIS statis merchant agar checkout dapat membuat QRIS nominal otomatis.
 7. Ubah `payment.bank` jika ingin menerima transfer bank.
 8. Ubah `spreadsheetTemplateCopyUrl` jika link template master berubah. Link ini hanya catatan internal untuk admin dan tidak ditampilkan sebagai tombol publik.
+9. Untuk membalas pembeli setelah pembayaran, salin format di `PAKET_SIAP_KIRIM_KASPILOT.md`, lalu ganti bagian License Key sesuai lisensi pembeli.
 
 Contoh blok konfigurasi:
 ```js
@@ -40,9 +41,9 @@ const ADMIN_SETTINGS = {
   productName: "KasPilot Master Template",
   basePrice: 99000,
   useUniqueCode: true,
-  buyerLibraryScriptId: "ISI_SCRIPT_ID_LIBRARY_KASPILOT_DI_SINI",
-  spreadsheetTemplateCopyUrl: "https://docs.google.com/spreadsheets/d/ID_SPREADSHEET/copy",
-  spreadsheetTemplateEditUrl: "https://docs.google.com/spreadsheets/d/ID_SPREADSHEET/edit",
+  buyerLibraryScriptId: "1cDP1qYyFTpPYi51pzg_quS83Vd9wCKOtkuPMCZney-GSDcGWZDLlNDIK",
+  spreadsheetTemplateCopyUrl: "https://docs.google.com/spreadsheets/d/13lgynvUMOhudeD7YdQnlBiUgbjkoQipwX1ExDWcOxpY/copy",
+  spreadsheetTemplateEditUrl: "https://docs.google.com/spreadsheets/d/13lgynvUMOhudeD7YdQnlBiUgbjkoQipwX1ExDWcOxpY/edit",
   payment: {
     qris: {
       enabled: true,
