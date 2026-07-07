@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsqr/1.4.0/jsQR.min.js"></script>
     <style>
         :root {
             --bg-main: #030712;
@@ -609,13 +610,30 @@
                         <!-- QRIS Merchant -->
                         <div class="settings-group">
                             <h2><i class="fa-solid fa-qrcode"></i> QRIS Dinamis</h2>
-                            <div class="form-field" style="margin-bottom: 12px;">
-                                <label for="set-qris-merchant">Nama Merchant QRIS</label>
+                            <div class="grid-2">
+                                <div class="form-field">
+                                    <label for="set-qris-merchant">Nama Merchant QRIS</label>
                                     <input id="set-qris-merchant" type="text">
+                                </div>
+                                <div class="form-field">
+                                    <label>Unggah Gambar QRIS Statis (Untuk Auto-Decode)</label>
+                                    <div style="display: flex; gap: 10px; align-items: center; margin-top: 6px;">
+                                        <label for="upload-qris-file" style="padding: 10px 14px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: white;">
+                                            <i class="fa-solid fa-image"></i> Pilih Gambar
+                                        </label>
+                                        <input type="file" id="upload-qris-file" accept="image/png, image/jpeg, image/webp" style="display: none;">
+                                        <span id="qris-upload-status" style="font-size: 12px; color: var(--text-secondary);">Belum ada gambar</span>
+                                    </div>
+                                    <div id="qris-preview-container" style="margin-top: 10px; display: none;">
+                                        <img id="qris-preview-img" style="max-width: 140px; border-radius: 8px; border: 1px solid var(--border-color); display: block;" alt="Preview QRIS">
+                                        <button type="button" id="btn-remove-qris-img" style="margin-top: 6px; padding: 4px 10px; font-size: 11px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: var(--accent-red); border-radius: 4px; cursor: pointer;">Hapus Gambar</button>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-field">
                                 <label for="set-qris-payload">Teks Payload QRIS Statis</label>
-                                <textarea id="set-qris-payload" placeholder="Tempel payload QRIS statis merchant Anda di sini"></textarea>
+                                <textarea id="set-qris-payload" placeholder="Teks payload QRIS akan terisi otomatis setelah Anda mengunggah gambar QRIS statis di atas. Atau dapat ditempel manual di sini."></textarea>
+                                <span id="qris-validation-status" style="font-size: 11px; margin-top: 4px; display: block; font-weight: 600;"></span>
                             </div>
                         </div>
 
@@ -1094,6 +1112,170 @@
                 this.classList.add("active");
                 document.getElementById(`tab-${target}`).classList.add("active");
             });
+        });
+
+        // ==========================================
+        // FITUR DECODE QRIS & VALIDASI CRC16 LOKAL
+        // ==========================================
+        function crc16CcittFalse(input) {
+            let crc = 0xffff;
+            for (let i = 0; i < input.length; i += 1) {
+                crc ^= input.charCodeAt(i) << 8;
+                for (let j = 0; j < 8; j += 1) {
+                    crc = (crc & 0x8000) !== 0 ? ((crc << 1) ^ 0x1021) : crc << 1;
+                    crc &= 0xffff;
+                }
+            }
+            return crc.toString(16).toUpperCase().padStart(4, "0");
+        }
+
+        function validateQrisPayload(payload) {
+            const normalized = String(payload || "").trim().replace(/[\r\n\t\s]/g, "");
+            const crcIndex = normalized.lastIndexOf("6304");
+            if (crcIndex < 0 || crcIndex + 8 !== normalized.length) {
+                throw new Error("Format payload QRIS tidak lengkap (harus berakhir dengan tag 6304).");
+            }
+            const body = normalized.slice(0, crcIndex);
+            const crcVal = normalized.slice(crcIndex + 4).toUpperCase();
+            const expectedCrc = crc16CcittFalse(`${body}6304`);
+            if (crcVal !== expectedCrc) {
+                throw new Error(`CRC tidak cocok. Terbaca ${crcVal}, seharusnya ${expectedCrc}.`);
+            }
+            
+            // Cari tag merchant name (59)
+            let merchantName = "Merchant QRIS";
+            let index = 0;
+            while (index < body.length) {
+                const id = body.slice(index, index + 2);
+                const lengthText = body.slice(index + 2, index + 4);
+                const length = parseInt(lengthText, 10);
+                if (isNaN(length) || length <= 0) break;
+                const val = body.slice(index + 4, index + 4 + length);
+                if (id === "59") {
+                    merchantName = val;
+                    break;
+                }
+                index += 4 + length;
+            }
+            return { valid: true, normalized, merchantName };
+        }
+
+        async function decodeWithBarcodeDetector(file) {
+            if (!("BarcodeDetector" in window)) return "";
+            try {
+                const formats = await window.BarcodeDetector.getSupportedFormats();
+                if (!formats.includes("qr_code")) return "";
+                const bitmap = await createImageBitmap(file);
+                try {
+                    const results = await new window.BarcodeDetector({ formats: ["qr_code"] }).detect(bitmap);
+                    return results[0]?.rawValue || "";
+                } finally {
+                    bitmap.close();
+                }
+            } catch (e) {
+                console.warn("BarcodeDetector gagal:", e);
+                return "";
+            }
+        }
+
+        async function decodeWithJsQr(file) {
+            if (!window.jsQR) throw new Error("Pustaka jsQR gagal dimuat. Periksa koneksi internet.");
+            const bitmap = await createImageBitmap(file);
+            try {
+                const maxSide = 2048;
+                const scale = Math.min(1, maxSide / Math.max(bitmap.width, bitmap.height));
+                const width = Math.max(1, Math.round(bitmap.width * scale));
+                const height = Math.max(1, Math.round(bitmap.height * scale));
+                
+                const canvas = document.createElement("canvas");
+                canvas.width = width;
+                canvas.height = height;
+                const context = canvas.getContext("2d", { willReadFrequently: true });
+                context.drawImage(bitmap, 0, 0, width, height);
+                const image = context.getImageData(0, 0, width, height);
+                return window.jsQR(image.data, width, height, { inversionAttempts: "attemptBoth" })?.data || "";
+            } finally {
+                bitmap.close();
+            }
+        }
+
+        const uploadQrisFile = document.getElementById("upload-qris-file");
+        const qrisUploadStatus = document.getElementById("qris-upload-status");
+        const qrisPreviewContainer = document.getElementById("qris-preview-container");
+        const qrisPreviewImg = document.getElementById("qris-preview-img");
+        const btnRemoveQrisImg = document.getElementById("btn-remove-qris-img");
+        const setQrisPayload = document.getElementById("set-qris-payload");
+        const qrisValidationStatus = document.getElementById("qris-validation-status");
+
+        let qrisImgUrl = "";
+
+        function clearQrisImg() {
+            uploadQrisFile.value = "";
+            qrisUploadStatus.textContent = "Belum ada gambar";
+            qrisPreviewContainer.style.display = "none";
+            qrisPreviewImg.src = "";
+            if (qrisImgUrl) {
+                URL.revokeObjectURL(qrisImgUrl);
+                qrisImgUrl = "";
+            }
+        }
+
+        uploadQrisFile.addEventListener("change", async function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith("image/")) {
+                clearQrisImg();
+                alert("File harus berupa gambar (PNG/JPG/WebP).");
+                return;
+            }
+
+            qrisUploadStatus.textContent = "Membaca QR...";
+            qrisImgUrl = URL.createObjectURL(file);
+            qrisPreviewImg.src = qrisImgUrl;
+            qrisPreviewContainer.style.display = "block";
+
+            try {
+                let payload = await decodeWithBarcodeDetector(file);
+                if (!payload) {
+                    payload = await decodeWithJsQr(file);
+                }
+
+                if (!payload) {
+                    throw new Error("Kode QR tidak terdeteksi. Silakan coba gambar QRIS yang lebih terang/jelas.");
+                }
+
+                const result = validateQrisPayload(payload);
+                setQrisPayload.value = result.normalized;
+                document.getElementById("set-qris-merchant").value = result.merchantName;
+                
+                qrisUploadStatus.textContent = "Berhasil didecode!";
+                qrisValidationStatus.textContent = `✓ QRIS Valid: ${result.merchantName}`;
+                qrisValidationStatus.style.color = "var(--accent-green)";
+            } catch (err) {
+                qrisUploadStatus.textContent = "Gagal didecode.";
+                qrisValidationStatus.textContent = `✗ Error: ${err.message}`;
+                qrisValidationStatus.style.color = "var(--accent-red)";
+            }
+        });
+
+        btnRemoveQrisImg.addEventListener("click", clearQrisImg);
+
+        setQrisPayload.addEventListener("input", function() {
+            const val = this.value.trim();
+            if (!val) {
+                qrisValidationStatus.textContent = "";
+                return;
+            }
+            try {
+                const result = validateQrisPayload(val);
+                qrisValidationStatus.textContent = `✓ QRIS Valid: ${result.merchantName}`;
+                qrisValidationStatus.style.color = "var(--accent-green)";
+                document.getElementById("set-qris-merchant").value = result.merchantName;
+            } catch (err) {
+                qrisValidationStatus.textContent = `✗ Error: ${err.message}`;
+                qrisValidationStatus.style.color = "var(--accent-red)";
+            }
         });
 
         // Initialize Session
