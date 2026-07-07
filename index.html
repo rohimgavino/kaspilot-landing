@@ -1382,6 +1382,10 @@
                                 <label for="admin-library-id">Script ID Library</label>
                                 <input id="admin-library-id" name="buyerLibraryScriptId" type="text">
                             </div>
+                            <div class="form-field wide-field">
+                                <label for="admin-web-app-url">URL Web App Penjualan (Google Sheets)</label>
+                                <input id="admin-web-app-url" name="googleWebAppUrl" type="url" placeholder="https://script.google.com/macros/s/.../exec">
+                            </div>
                             <div class="form-field">
                                 <label for="admin-qris-merchant">Nama merchant QRIS</label>
                                 <input id="admin-qris-merchant" name="qrisMerchantName" type="text">
@@ -1419,6 +1423,7 @@
         // Default admin settings. Panel ?admin=1 dapat menimpa nilai ini di browser admin via localStorage.
         const ADMIN_STORAGE_KEY = "kaspilot_admin_settings";
         const ADMIN_DEFAULT_SETTINGS = {
+            googleWebAppUrl: "", // URL Web App Penjualan Google Sheets
             whatsappNumber: "628991977560",
             adminName: "Admin KasPilot",
             productName: "KasPilot Master Template",
@@ -1678,6 +1683,26 @@
             updateOrderSummary();
             renderPaymentInfo();
             document.getElementById("checkout-result").classList.add("active");
+
+            // Kirim data pesanan otomatis ke Google Sheets Master jika dikonfigurasi
+            if (ADMIN_SETTINGS.googleWebAppUrl) {
+                const payload = {
+                    action: "submitOrder",
+                    name: checkoutState.buyer.name,
+                    whatsapp: checkoutState.buyer.whatsapp,
+                    email: checkoutState.buyer.email,
+                    method: checkoutState.method,
+                    nominal: ADMIN_SETTINGS.basePrice,
+                    uniqueCode: checkoutState.uniqueCode,
+                    total: checkoutState.total
+                };
+                fetch(ADMIN_SETTINGS.googleWebAppUrl, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                }).catch(err => console.warn("Pencatatan pesanan otomatis gagal:", err));
+            }
         }
 
         function confirmPaymentWhatsApp() {
@@ -1733,6 +1758,7 @@ Saya akan kirim bukti pembayaran di chat ini. Setelah terkonfirmasi, mohon dikir
             document.getElementById("admin-account-name").value = ADMIN_SETTINGS.payment.bank.accountName || "";
             document.getElementById("admin-template-copy").value = ADMIN_SETTINGS.spreadsheetTemplateCopyUrl || "";
             document.getElementById("admin-library-id").value = ADMIN_SETTINGS.buyerLibraryScriptId || "";
+            document.getElementById("admin-web-app-url").value = ADMIN_SETTINGS.googleWebAppUrl || "";
             document.getElementById("admin-qris-merchant").value = ADMIN_SETTINGS.payment.qris.merchantName || "";
             document.getElementById("admin-qris-payload").value = ADMIN_SETTINGS.payment.qris.staticPayload || "";
             document.getElementById("admin-unique-code").checked = Boolean(ADMIN_SETTINGS.useUniqueCode);
@@ -1747,6 +1773,7 @@ Saya akan kirim bukti pembayaran di chat ini. Setelah terkonfirmasi, mohon dikir
                 useUniqueCode: document.getElementById("admin-unique-code").checked,
                 buyerLibraryScriptId: document.getElementById("admin-library-id").value.trim(),
                 spreadsheetTemplateCopyUrl: document.getElementById("admin-template-copy").value.trim(),
+                googleWebAppUrl: document.getElementById("admin-web-app-url").value.trim(),
                 payment: {
                     qris: {
                         enabled: true,
@@ -1791,7 +1818,29 @@ Saya akan kirim bukti pembayaran di chat ini. Setelah terkonfirmasi, mohon dikir
                 link.href = `https://wa.me/${ADMIN_SETTINGS.whatsappNumber}?text=${encodeURIComponent(text)}`;
                 link.setAttribute('aria-label', `${link.textContent.trim()} via ${ADMIN_SETTINGS.adminName}`);
             });
+            
+            // Perbarui harga promo di Pricing Card secara dinamis
+            const discountEl = document.querySelector(".price-discount");
+            if (discountEl) {
+                discountEl.textContent = rupiah(ADMIN_SETTINGS.basePrice);
+            }
+            
             updateOrderSummary();
+        }
+
+        function fetchDynamicSettings() {
+            if (ADMIN_SETTINGS.googleWebAppUrl) {
+                const fetchUrl = `${ADMIN_SETTINGS.googleWebAppUrl}?action=getSettings`;
+                fetch(fetchUrl)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data && data.success && data.settings) {
+                            ADMIN_SETTINGS = mergeSettings(ADMIN_SETTINGS, data.settings);
+                            refreshConfiguredContent();
+                        }
+                    })
+                    .catch(err => console.warn("Koneksi gagal ke Web App Penjualan:", err));
+            }
         }
 
         function applyAdminSettings() {
@@ -1818,6 +1867,9 @@ Saya akan kirim bukti pembayaran di chat ini. Setelah terkonfirmasi, mohon dikir
                     closeAdminModal();
                 }
             });
+            
+            // Tarik data config terbaru dari Google Sheets saat load halaman
+            fetchDynamicSettings();
         }
 
         applyAdminSettings();

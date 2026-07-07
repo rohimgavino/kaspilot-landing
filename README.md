@@ -33,27 +33,35 @@ Untuk mengubah tautan pemesanan WhatsApp, harga, metode pembayaran, admin, dan t
 8. Ubah `spreadsheetTemplateCopyUrl` jika link template master berubah. Link ini hanya catatan internal untuk admin dan tidak ditampilkan sebagai tombol publik.
 9. Untuk membalas pembeli setelah pembayaran, salin format di `PAKET_SIAP_KIRIM_KASPILOT.md`, lalu ganti bagian License Key sesuai lisensi pembeli.
 
-### Panel Admin Lokal
+### Panel Admin Online (Terintegrasi Google Sheets)
 
-Landing page juga punya panel admin ringan untuk menguji/mengatur pembayaran tanpa membuka kode:
+KasPilot kini dilengkapi dengan halaman panel admin mandiri (`admin.html`) seperti halnya Taaruf Planner. Data pesanan pembeli dan pengaturan website disimpan langsung di Google Sheets Master Penjualan Anda, sehingga:
+- Pengaturan harga, WhatsApp, bank, dan QRIS berubah seketika untuk semua pengunjung website tanpa perlu mengubah kode `index.html`.
+- Setiap pesanan pembeli yang mengklik tombol bayar tercatat otomatis di Google Sheets.
+- Anda bisa memantau status pesanan, total bayar, bukti transaksi, hingga omset penjualan real-time di dasbor admin.
 
-```text
-https://rohimgavino.github.io/kaspilot-landing/?admin=1
-```
+#### Cara Mengaktifkan:
+1. **Buat Google Sheets Master**: Buat sebuah spreadsheet di Google Drive Anda (misal: `Database Penjualan KasPilot`).
+2. **Pasang Apps Script**: Klik menu **Ekstensi > Apps Script**. Hapus kode bawaan, lalu tempel isi berkas `AppsScript_MasterPenjualan.js` yang ada di proyek ini.
+3. **Konfigurasi & Deploy**: 
+   - Ubah `ADMIN_TOKEN_DEFAULT` di baris 19 sesuai sandi/token admin pilihan Anda.
+   - Klik tombol **Terapkan > Penerapan baru (New Deployment)**.
+   - Pilih jenis penerapan: **Aplikasi web**.
+   - Setel *Jalankan sebagai:* **Saya** dan *Siapa yang memiliki akses:* **Siapa saja**.
+   - Klik **Terapkan** dan berikan otorisasi Google.
+   - Salin **URL Aplikasi Web** yang diberikan.
+4. **Integrasikan ke Landing Page**:
+   - Buka berkas `index.html`. Cari `googleWebAppUrl` di dalam blok `ADMIN_DEFAULT_SETTINGS`, lalu tempel URL Web App tersebut di sana:
+     `googleWebAppUrl: "https://script.google.com/macros/s/.../exec"`
+   - Push perubahan `index.html` ini ke GitHub.
+5. **Gunakan Dasbor Admin**:
+   - Buka URL website Anda dengan tambahan path `/admin.html` (misal: `https://rohimgavino.github.io/kaspilot-landing/admin.html`).
+   - Masukkan **URL Web App** dan **Sandi/Token Admin** Anda untuk login.
+   - Sekarang Anda dapat mengelola pengaturan penjualan dan daftar pesanan langsung dari browser!
 
-Dari panel ini admin bisa mengubah:
-- nomor WhatsApp admin
-- nama admin dan nama produk
-- harga promo
-- rekening bank
-- payload QRIS statis
-- link template buyer
-- Script ID Library
-- kode unik aktif/tidak
+### Panel Admin Lokal (Cadangan Offline)
 
-Catatan penting: karena website ini static GitHub Pages, pengaturan panel admin disimpan di `localStorage` browser admin. Agar perubahan berlaku permanen untuk semua pembeli, klik **Salin Config**, tempel hasilnya ke blok `ADMIN_DEFAULT_SETTINGS` di `index.html`, lalu push ulang ke GitHub.
-
-Contoh blok konfigurasi:
+Jika Anda tidak menggunakan database Google Sheets (kolom `googleWebAppUrl` dikosongkan), Anda tetap bisa menggunakan panel admin lokal bawaan (di dalam halaman utama) dengan parameter query:
 ```js
 const ADMIN_DEFAULT_SETTINGS = {
   whatsappNumber: "6285712345678",

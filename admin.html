@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex,nofollow">
+    <title>KasPilot - Panel Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #030712;
+            --bg-surface: rgba(17, 24, 39, 0.7);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.15);
+            --accent-green: #10b981;
+            --accent-green-glow: rgba(16, 185, 129, 0.15);
+            --accent-red: #ef4444;
+            --font-head: 'Outfit', sans-serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            line-height: 1.6;
+            background-image: radial-gradient(circle at top, #111827 0%, #030712 60%);
+            min-height: 100vh;
+        }
+
+        [hidden] {
+            display: none !important;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header / Navbar */
+        header {
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border-color);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: rgba(3, 7, 18, 0.8);
+        }
+
+        .nav-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: var(--font-head);
+            font-size: 22px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #a5b4fc, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-logout {
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 700;
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--accent-red);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            background: var(--accent-red);
+            color: white;
+        }
+
+        main {
+            padding: 40px 0 80px 0;
+        }
+
+        /* Login Box */
+        .login-card {
+            max-width: 440px;
+            margin: 60px auto;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 36px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(99, 102, 241, 0.05);
+        }
+
+        .login-card h1 {
+            font-family: var(--font-head);
+            font-size: 26px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: linear-gradient(to right, #ffffff, #9ca3af);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .login-card p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        /* Forms */
+        form {
+            display: grid;
+            gap: 16px;
+        }
+
+        .form-field {
+            display: grid;
+            gap: 6px;
+        }
+
+        .form-field label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-secondary);
+        }
+
+        .form-field input, .form-field textarea, .form-field select {
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(2, 6, 23, 0.65);
+            color: white;
+            border-radius: 8px;
+            padding: 12px 14px;
+            font: inherit;
+        }
+
+        .form-field textarea {
+            min-height: 96px;
+            resize: vertical;
+        }
+
+        .form-field input:focus, .form-field textarea:focus, .form-field select:focus {
+            outline: none;
+            border-color: rgba(99, 102, 241, 0.75);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        }
+
+        .toggle-field {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 4px;
+        }
+
+        .toggle-field input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        button.btn-submit {
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
+
+        button.btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .status-msg {
+            font-size: 13px;
+            text-align: center;
+            margin-top: 8px;
+        }
+        .status-msg.error { color: var(--accent-red); }
+        .status-msg.success { color: var(--accent-green); }
+
+        /* Dashboard & Tabs */
+        .dashboard-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+
+        .dashboard-heading h1 {
+            font-family: var(--font-head);
+            font-size: 32px;
+            font-weight: 800;
+        }
+
+        .dashboard-heading p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .admin-tabs {
+            display: flex;
+            gap: 6px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+
+        .admin-tabs button {
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .admin-tabs button.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* Settings Grid Layout */
+        .settings-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+
+        .settings-group {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .settings-group h2 {
+            font-family: var(--font-head);
+            font-size: 18px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .wide-field {
+            grid-column: 1 / -1;
+        }
+
+        .sidebar-help {
+            background: rgba(99, 102, 241, 0.05);
+            border: 1px dashed rgba(99, 102, 241, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            height: fit-content;
+        }
+
+        .sidebar-help h3 {
+            color: white;
+            font-family: var(--font-head);
+            font-size: 15px;
+        }
+
+        .sidebar-help ul {
+            padding-left: 18px;
+        }
+
+        .sidebar-help li {
+            margin-bottom: 6px;
+        }
+
+        /* Order Table CSS */
+        .table-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .table-toolbar {
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .table-toolbar input[type="search"] {
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(2, 6, 23, 0.65);
+            color: white;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 13px;
+            width: 240px;
+        }
+
+        .table-toolbar select {
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(2, 6, 23, 0.65);
+            color: white;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 13px;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.02);
+            font-weight: 700;
+            color: var(--text-secondary);
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-badge.baru { background: rgba(99, 102, 241, 0.15); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.3); }
+        .status-badge.dihubungi { background: rgba(245, 158, 11, 0.15); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .status-badge.lunas { background: rgba(16, 185, 129, 0.15); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .status-badge.batal { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.3); }
+
+        .btn-action-select {
+            background: rgba(2, 6, 23, 0.8);
+            border: 1px solid var(--border-color);
+            color: white;
+            border-radius: 4px;
+            padding: 4px 6px;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 48px;
+            color: var(--text-secondary);
+        }
+
+        /* Analytics Cards */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .analytics-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .analytics-card span {
+            display: block;
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .analytics-card strong {
+            font-family: var(--font-head);
+            font-size: 28px;
+            color: white;
+            font-weight: 800;
+        }
+
+        .btn-refresh {
+            padding: 10px 18px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: white;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-refresh:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .settings-layout {
+                grid-template-columns: 1fr;
+            }
+            .analytics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+            .dashboard-heading {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <div class="container nav-wrapper">
+            <a href="index.html" class="logo">
+                🚀 KasPilot Admin
+            </a>
+            <button type="button" class="btn-logout" id="btn-logout" hidden><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- 1. LOGIN SCREEN -->
+        <section class="login-card" id="login-card">
+            <h1>Masuk Admin KasPilot</h1>
+            <p>Masukkan URL Apps Script Web App Master Penjualan & Token Admin untuk tersambung ke database Google Sheets.</p>
+            <form id="login-form">
+                <div class="form-field">
+                    <label for="login-web-app-url">URL Aplikasi Web GAS (Master)</label>
+                    <input id="login-web-app-url" type="url" placeholder="https://script.google.com/macros/s/.../exec" required>
+                </div>
+                <div class="form-field">
+                    <label for="login-token">Sandi / Token Admin</label>
+                    <input id="login-token" type="password" placeholder="Masukkan Token Admin" required>
+                </div>
+                <button type="submit" class="btn-submit"><i class="fa-solid fa-key"></i> Sambungkan</button>
+                <div class="status-msg error" id="login-error-msg"></div>
+            </form>
+        </section>
+
+        <!-- 2. DASHBOARD MAIN -->
+        <section id="admin-dashboard" hidden>
+            <div class="dashboard-heading">
+                <div>
+                    <h1>Pengelolaan Situs KasPilot</h1>
+                    <p>Konfigurasi link pembayaran, harga promosi, dan monitoring pesanan pembeli.</p>
+                </div>
+                <button type="button" class="btn-refresh" id="btn-refresh-data"><i class="fa-solid fa-arrows-rotate"></i> Muat Ulang</button>
+            </div>
+
+            <!-- Tabs Navigation -->
+            <nav class="admin-tabs" aria-label="Menu Admin">
+                <button class="active" type="button" data-tab="settings"><i class="fa-solid fa-sliders"></i> Pengaturan Web</button>
+                <button type="button" data-tab="orders"><i class="fa-solid fa-receipt"></i> Daftar Pesanan</button>
+                <button type="button" data-tab="analytics"><i class="fa-solid fa-chart-line"></i> Analitik Penjualan</button>
+                <button type="button" data-tab="security"><i class="fa-solid fa-shield-halved"></i> Keamanan</button>
+            </nav>
+
+            <!-- TAB 1: SETTINGS -->
+            <section class="tab-panel active" id="tab-settings">
+                <form id="settings-form" class="settings-layout">
+                    <div>
+                        <!-- Kontak & Produk -->
+                        <div class="settings-group">
+                            <h2><i class="fa-solid fa-phone"></i> Kontak & Informasi</h2>
+                            <div class="grid-2">
+                                <div class="form-field">
+                                    <label for="set-whatsapp">WhatsApp Admin (format: 628xxx)</label>
+                                    <input id="set-whatsapp" type="text" placeholder="628xxxxxxxxxx" required>
+                                </div>
+                                <div class="form-field">
+                                    <label for="set-admin-name">Nama Admin</label>
+                                    <input id="set-admin-name" type="text" required>
+                                </div>
+                                <div class="form-field wide-field">
+                                    <label for="set-product-name">Nama Produk</label>
+                                    <input id="set-product-name" type="text" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Harga & Skema -->
+                        <div class="settings-group">
+                            <h2><i class="fa-solid fa-tags"></i> Skema Harga & Promo</h2>
+                            <div class="grid-2">
+                                <div class="form-field">
+                                    <label for="set-price">Harga Promo (Rp)</label>
+                                    <input id="set-price" type="number" min="0" required>
+                                </div>
+                                <div class="form-field" style="align-self: center; margin-top: 10px;">
+                                    <label class="toggle-field">
+                                        <input id="set-unique-code" type="checkbox">
+                                        <span>Gunakan Kode Unik Pembayaran</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Rekening Bank -->
+                        <div class="settings-group">
+                            <h2><i class="fa-solid fa-building-columns"></i> Transfer Bank</h2>
+                            <div class="grid-2">
+                                <div class="form-field">
+                                    <label for="set-bank-name">Nama Bank</label>
+                                    <input id="set-bank-name" type="text" placeholder="BCA/Mandiri/BRI">
+                                </div>
+                                <div class="form-field">
+                                    <label for="set-bank-account">Nomor Rekening</label>
+                                    <input id="set-bank-account" type="text">
+                                </div>
+                                <div class="form-field wide-field">
+                                    <label for="set-bank-holder">Nama Pemilik Rekening</label>
+                                    <input id="set-bank-holder" type="text">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- QRIS Merchant -->
+                        <div class="settings-group">
+                            <h2><i class="fa-solid fa-qrcode"></i> QRIS Dinamis</h2>
+                            <div class="form-field" style="margin-bottom: 12px;">
+                                <label for="set-qris-merchant">Nama Merchant QRIS</label>
+                                    <input id="set-qris-merchant" type="text">
+                            </div>
+                            <div class="form-field">
+                                <label for="set-qris-payload">Teks Payload QRIS Statis</label>
+                                <textarea id="set-qris-payload" placeholder="Tempel payload QRIS statis merchant Anda di sini"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Catatan Aktivasi (Untuk Pembeli) -->
+                        <div class="settings-group">
+                            <h2><i class="fa-solid fa-circle-info"></i> Paket Aktivasi Pembeli</h2>
+                            <div class="form-field" style="margin-bottom: 12px;">
+                                <label for="set-library-id">Script ID Library KasPilot</label>
+                                <input id="set-library-id" type="text">
+                            </div>
+                            <div class="form-field">
+                                <label for="set-template-copy">Link Copy Template Spreadsheet</label>
+                                <input id="set-template-copy" type="url">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-submit"><i class="fa-solid fa-floppy-disk"></i> Simpan Pengaturan</button>
+                        <div class="status-msg" id="settings-status-msg"></div>
+                    </div>
+
+                    <!-- Sidebar Info -->
+                    <aside class="sidebar-help">
+                        <h3><i class="fa-solid fa-circle-question"></i> Panduan Admin</h3>
+                        <p>Pengaturan ini akan tersimpan langsung di Google Sheets Master Anda (sheet <code>Settings</code>).</p>
+                        <p>Agar Landing Page utama pembeli (<code>index.html</code>) dapat memuat data-data ini secara dinamis:</p>
+                        <ul>
+                            <li>Salin <strong>URL Aplikasi Web GAS</strong> milik Anda.</li>
+                            <li>Buka berkas <code>index.html</code>.</li>
+                            <li>Cari variabel <code>ADMIN_DEFAULT_SETTINGS</code>.</li>
+                            <li>Isi parameter <code>googleWebAppUrl: "URL_ANDA"</code> di dalamnya.</li>
+                        </ul>
+                    </aside>
+                </form>
+            </section>
+
+            <!-- TAB 2: ORDERS -->
+            <section class="tab-panel" id="tab-orders">
+                <div class="table-card">
+                    <div class="table-toolbar">
+                        <input type="search" id="order-search" placeholder="Cari nama, email, wa, Ref..." aria-label="Cari Pesanan">
+                        <select id="order-filter" aria-label="Filter status">
+                            <option value="">Semua Status</option>
+                            <option value="Baru">Baru</option>
+                            <option value="Dihubungi">Dihubungi</option>
+                            <option value="Lunas">Lunas</option>
+                            <option value="Batal">Batal</option>
+                        </select>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Tanggal</th>
+                                    <th>Ref ID</th>
+                                    <th>Nama Pembeli</th>
+                                    <th>Kontak WA</th>
+                                    <th>Email</th>
+                                    <th>Metode</th>
+                                    <th>Total Bayar</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="orders-tbody">
+                                <!-- Baris pesanan diisi via Javascript -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="empty-state" id="orders-empty-state">Belum ada pesanan masuk.</div>
+                </div>
+            </section>
+
+            <!-- TAB 3: ANALYTICS -->
+            <section class="tab-panel" id="tab-analytics">
+                <div class="analytics-grid">
+                    <article class="analytics-card">
+                        <span>Total Pesanan</span>
+                        <strong id="stat-total-orders">0</strong>
+                    </article>
+                    <article class="analytics-card">
+                        <span>Menunggu Proses</span>
+                        <strong id="stat-pending-orders" style="color: #fcd34d;">0</strong>
+                    </article>
+                    <article class="analytics-card">
+                        <span>Lunas / Selesai</span>
+                        <strong id="stat-completed-orders" style="color: #34d399;">0</strong>
+                    </article>
+                    <article class="analytics-card">
+                        <span>Omset Penjualan</span>
+                        <strong id="stat-revenue" style="color: #6366f1;">Rp0</strong>
+                    </article>
+                </div>
+                
+                <div class="settings-group">
+                    <h2><i class="fa-solid fa-chart-pie"></i> Ringkasan Metode Pembayaran</h2>
+                    <div class="grid-2" style="margin-top: 14px;">
+                        <div class="analytics-card">
+                            <span>Pembayaran QRIS</span>
+                            <strong id="stat-pay-qris" style="font-size: 22px;">0 kali</strong>
+                        </div>
+                        <div class="analytics-card">
+                            <span>Transfer Bank</span>
+                            <strong id="stat-pay-bank" style="font-size: 22px;">0 kali</strong>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4: SECURITY -->
+            <section class="tab-panel" id="tab-security">
+                <div class="settings-group" style="max-width: 500px;">
+                    <h2><i class="fa-solid fa-key"></i> Ganti Sandi Admin</h2>
+                    <form id="security-form">
+                        <div class="form-field">
+                            <label for="sec-new-token">Token / Sandi Baru</label>
+                            <input id="sec-new-token" type="password" placeholder="Minimal 4 karakter" required>
+                        </div>
+                        <button type="submit" class="btn-submit">Ubah Sandi</button>
+                        <div class="status-msg" id="security-status-msg"></div>
+                    </form>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <script>
+        // DOM Elements
+        const loginCard = document.getElementById("login-card");
+        const adminDashboard = document.getElementById("admin-dashboard");
+        const btnLogout = document.getElementById("btn-logout");
+        
+        const loginForm = document.getElementById("login-form");
+        const loginErrorMsg = document.getElementById("login-error-msg");
+        const settingsForm = document.getElementById("settings-form");
+        const settingsStatusMsg = document.getElementById("settings-status-msg");
+        const securityForm = document.getElementById("security-form");
+        const securityStatusMsg = document.getElementById("security-status-msg");
+        const btnRefreshData = document.getElementById("btn-refresh-data");
+        
+        const orderSearch = document.getElementById("order-search");
+        const orderFilter = document.getElementById("order-filter");
+        const ordersTbody = document.getElementById("orders-tbody");
+        const ordersEmptyState = document.getElementById("orders-empty-state");
+
+        // App State
+        let adminConfig = {
+            webAppUrl: "",
+            token: ""
+        };
+        let cachedOrders = [];
+
+        // Load Session on Startup
+        function initSession() {
+            const savedUrl = localStorage.getItem("kaspilot_admin_url");
+            const savedToken = localStorage.getItem("kaspilot_admin_token");
+            if (savedUrl && savedToken) {
+                adminConfig.webAppUrl = savedUrl;
+                adminConfig.token = savedToken;
+                connectToSheet(savedUrl, savedToken);
+            }
+        }
+
+        // Connect/Login Function
+        function connectToSheet(url, token) {
+            loginErrorMsg.textContent = "Sedang menghubungkan ke Google Sheets...";
+            loginErrorMsg.className = "status-msg success";
+
+            // Test getSettings to verify webAppUrl & token
+            const fetchUrl = `${url}?action=getOrders&token=${encodeURIComponent(token)}`;
+            
+            fetch(fetchUrl)
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.success) {
+                        // Simpan credentials
+                        localStorage.setItem("kaspilot_admin_url", url);
+                        localStorage.setItem("kaspilot_admin_token", token);
+                        adminConfig.webAppUrl = url;
+                        adminConfig.token = token;
+
+                        // Tampilkan Dashboard
+                        loginCard.hidden = true;
+                        adminDashboard.hidden = false;
+                        btnLogout.hidden = false;
+
+                        // Muat Data Settings
+                        loadSettingsFromSheet();
+                        
+                        // Muat Data Orders
+                        cachedOrders = data.orders || [];
+                        renderOrders(cachedOrders);
+                        calculateAnalytics(cachedOrders);
+                    } else {
+                        throw new Error(data.message || "Gagal menyambungkan.");
+                    }
+                })
+                .catch(err => {
+                    loginErrorMsg.textContent = `Gagal menyambungkan: ${err.message}`;
+                    loginErrorMsg.className = "status-msg error";
+                });
+        }
+
+        // Fetch Settings
+        function loadSettingsFromSheet() {
+            const fetchUrl = `${adminConfig.webAppUrl}?action=getSettings`;
+            fetch(fetchUrl)
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.success) {
+                        const s = data.settings || {};
+                        document.getElementById("set-whatsapp").value = s.whatsappNumber || "";
+                        document.getElementById("set-admin-name").value = s.adminName || "";
+                        document.getElementById("set-product-name").value = s.productName || "";
+                        document.getElementById("set-price").value = s.basePrice || 0;
+                        document.getElementById("set-unique-code").checked = Boolean(s.useUniqueCode);
+                        document.getElementById("set-bank-name").value = s.bankName || "";
+                        document.getElementById("set-bank-account").value = s.accountNumber || "";
+                        document.getElementById("set-bank-holder").value = s.accountName || "";
+                        document.getElementById("set-qris-merchant").value = s.qrisMerchantName || "";
+                        document.getElementById("set-qris-payload").value = s.qrisStaticPayload || "";
+                        document.getElementById("set-library-id").value = s.buyerLibraryScriptId || "";
+                        document.getElementById("set-template-copy").value = s.spreadsheetTemplateCopyUrl || "";
+                    }
+                })
+                .catch(err => {
+                    console.error("Gagal memuat settings:", err);
+                });
+        }
+
+        // Save Settings Form
+        settingsForm.addEventListener("submit", function(e) {
+            e.preventDefault();
+            settingsStatusMsg.textContent = "Menyimpan pengaturan...";
+            settingsStatusMsg.className = "status-msg success";
+
+            const payload = {
+                action: "saveSettings",
+                token: adminConfig.token,
+                settings: {
+                    whatsappNumber: document.getElementById("set-whatsapp").value.trim(),
+                    adminName: document.getElementById("set-admin-name").value.trim(),
+                    productName: document.getElementById("set-product-name").value.trim(),
+                    basePrice: Number(document.getElementById("set-price").value || 0),
+                    useUniqueCode: document.getElementById("set-unique-code").checked,
+                    bankName: document.getElementById("set-bank-name").value.trim(),
+                    accountNumber: document.getElementById("set-bank-account").value.trim(),
+                    accountName: document.getElementById("set-bank-holder").value.trim(),
+                    qrisMerchantName: document.getElementById("set-qris-merchant").value.trim(),
+                    qrisStaticPayload: document.getElementById("set-qris-payload").value.trim(),
+                    buyerLibraryScriptId: document.getElementById("set-library-id").value.trim(),
+                    spreadsheetTemplateCopyUrl: document.getElementById("set-template-copy").value.trim()
+                }
+            };
+
+            fetch(adminConfig.webAppUrl, {
+                method: "POST",
+                mode: "no-cors", // Google Apps Script mengembalikan redirect
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            })
+            .then(() => {
+                settingsStatusMsg.textContent = "Pengaturan berhasil dikirim ke Google Sheets.";
+                settingsStatusMsg.className = "status-msg success";
+                setTimeout(loadSettingsFromSheet, 1500);
+            })
+            .catch(err => {
+                settingsStatusMsg.textContent = `Gagal menyimpan: ${err.message}`;
+                settingsStatusMsg.className = "status-msg error";
+            });
+        });
+
+        // Update Order Status
+        window.changeOrderStatus = function(row, statusSelect) {
+            const status = statusSelect.value;
+            statusSelect.disabled = true;
+
+            const payload = {
+                action: "updateOrderStatus",
+                token: adminConfig.token,
+                row: row,
+                status: status
+            };
+
+            fetch(adminConfig.webAppUrl, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            })
+            .then(() => {
+                statusSelect.disabled = false;
+                // Update local cache
+                const order = cachedOrders.find(o => o.row === row);
+                if (order) order.status = status;
+                calculateAnalytics(cachedOrders);
+            })
+            .catch(err => {
+                statusSelect.disabled = false;
+                alert(`Gagal merubah status: ${err.message}`);
+            });
+        };
+
+        // Render Orders Table
+        function renderOrders(ordersList) {
+            ordersTbody.innerHTML = "";
+            const search = orderSearch.value.toLowerCase().trim();
+            const filter = orderFilter.value;
+
+            const filtered = ordersList.filter(o => {
+                const matchSearch = !search || 
+                    String(o.name || "").toLowerCase().includes(search) || 
+                    String(o.email || "").toLowerCase().includes(search) || 
+                    String(o.whatsapp || "").toLowerCase().includes(search) ||
+                    String(o.orderId || "").toLowerCase().includes(search);
+                const matchFilter = !filter || o.status === filter;
+                return matchSearch && matchFilter;
+            });
+
+            if (filtered.length === 0) {
+                ordersEmptyState.hidden = false;
+                return;
+            }
+            ordersEmptyState.hidden = true;
+
+            filtered.forEach(o => {
+                const tr = document.createElement("tr");
+                const dateStr = o.timestamp ? new Date(o.timestamp).toLocaleString("id-ID", {dateStyle: "medium", timeStyle: "short"}) : "-";
+                const totalFormatted = `Rp${Number(o.total || 0).toLocaleString("id-ID")}`;
+                
+                tr.innerHTML = `
+                    <td>${dateStr}</td>
+                    <td><strong>${o.orderId || "-"}</strong></td>
+                    <td>${o.name || "-"}</td>
+                    <td><a href="https://wa.me/${o.whatsapp}" target="_blank" style="color: #6366f1; text-decoration: none;">${o.whatsapp || "-"}</a></td>
+                    <td>${o.email || "-"}</td>
+                    <td style="text-transform: uppercase;">${o.method || "-"}</td>
+                    <td><strong>${totalFormatted}</strong></td>
+                    <td><span class="status-badge ${String(o.status || "baru").toLowerCase()}">${o.status || "Baru"}</span></td>
+                    <td>
+                        <select class="btn-action-select" onchange="changeOrderStatus(${o.row}, this)">
+                            <option value="Baru" ${o.status === "Baru" ? "selected" : ""}>Baru</option>
+                            <option value="Dihubungi" ${o.status === "Dihubungi" ? "selected" : ""}>Dihubungi</option>
+                            <option value="Lunas" ${o.status === "Lunas" ? "selected" : ""}>Lunas</option>
+                            <option value="Batal" ${o.status === "Batal" ? "selected" : ""}>Batal</option>
+                        </select>
+                    </td>
+                `;
+                ordersTbody.appendChild(tr);
+            });
+        }
+
+        // Calculate Analytics Statistics
+        function calculateAnalytics(ordersList) {
+            let total = ordersList.length;
+            let pending = 0;
+            let completed = 0;
+            let revenue = 0;
+            let qrisCount = 0;
+            let bankCount = 0;
+
+            ordersList.forEach(o => {
+                const statusLower = String(o.status || "baru").toLowerCase();
+                const methodLower = String(o.method || "").toLowerCase();
+                
+                if (statusLower === "baru" || statusLower === "dihubungi") {
+                    pending++;
+                } else if (statusLower === "lunas") {
+                    completed++;
+                    revenue += Number(o.total || 0);
+                }
+
+                if (methodLower === "qris") qrisCount++;
+                else if (methodLower === "bank") bankCount++;
+            });
+
+            document.getElementById("stat-total-orders").textContent = total;
+            document.getElementById("stat-pending-orders").textContent = pending;
+            document.getElementById("stat-completed-orders").textContent = completed;
+            document.getElementById("stat-revenue").textContent = `Rp${revenue.toLocaleString("id-ID")}`;
+            document.getElementById("stat-pay-qris").textContent = `${qrisCount} kali`;
+            document.getElementById("stat-pay-bank").textContent = `${bankCount} kali`;
+        }
+
+        // Security Form Submit
+        securityForm.addEventListener("submit", function(e) {
+            e.preventDefault();
+            const newToken = document.getElementById("sec-new-token").value;
+            securityStatusMsg.textContent = "Mengubah sandi admin...";
+            securityStatusMsg.className = "status-msg success";
+
+            const payload = {
+                action: "updateAdminToken",
+                token: adminConfig.token,
+                newToken: newToken
+            };
+
+            fetch(adminConfig.webAppUrl, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            })
+            .then(() => {
+                securityStatusMsg.textContent = "Sandi admin berhasil diperbarui di Google Sheets.";
+                securityStatusMsg.className = "status-msg success";
+                localStorage.setItem("kaspilot_admin_token", newToken);
+                adminConfig.token = newToken;
+                document.getElementById("sec-new-token").value = "";
+            })
+            .catch(err => {
+                securityStatusMsg.textContent = `Gagal mengubah sandi: ${err.message}`;
+                securityStatusMsg.className = "status-msg error";
+            });
+        });
+
+        // Refresh Data Button
+        btnRefreshData.addEventListener("click", function() {
+            btnRefreshData.disabled = true;
+            btnRefreshData.innerHTML = `<i class="fa-solid fa-arrows-rotate fa-spin"></i> Memuat...`;
+            
+            const fetchUrl = `${adminConfig.webAppUrl}?action=getOrders&token=${encodeURIComponent(adminConfig.token)}`;
+            fetch(fetchUrl)
+                .then(res => res.json())
+                .then(data => {
+                    btnRefreshData.disabled = false;
+                    btnRefreshData.innerHTML = `<i class="fa-solid fa-arrows-rotate"></i> Muat Ulang`;
+                    if (data && data.success) {
+                        cachedOrders = data.orders || [];
+                        renderOrders(cachedOrders);
+                        calculateAnalytics(cachedOrders);
+                        loadSettingsFromSheet();
+                    }
+                })
+                .catch(err => {
+                    btnRefreshData.disabled = false;
+                    btnRefreshData.innerHTML = `<i class="fa-solid fa-arrows-rotate"></i> Muat Ulang`;
+                    alert(`Gagal memuat ulang data: ${err.message}`);
+                });
+        });
+
+        // Filters Event Listeners
+        orderSearch.addEventListener("input", () => renderOrders(cachedOrders));
+        orderFilter.addEventListener("change", () => renderOrders(cachedOrders));
+
+        // Submit Login Form
+        loginForm.addEventListener("submit", function(e) {
+            e.preventDefault();
+            const url = document.getElementById("login-web-app-url").value.trim();
+            const token = document.getElementById("login-token").value.trim();
+            connectToSheet(url, token);
+        });
+
+        // Logout
+        btnLogout.addEventListener("click", function() {
+            localStorage.removeItem("kaspilot_admin_url");
+            localStorage.removeItem("kaspilot_admin_token");
+            adminConfig.webAppUrl = "";
+            adminConfig.token = "";
+            cachedOrders = [];
+            loginCard.hidden = false;
+            adminDashboard.hidden = true;
+            btnLogout.hidden = true;
+        });
+
+        // Tab Navigation
+        const tabs = document.querySelectorAll(".admin-tabs button");
+        const panels = document.querySelectorAll(".tab-panel");
+
+        tabs.forEach(tab => {
+            tab.addEventListener("click", function() {
+                const target = this.dataset.tab;
+                
+                tabs.forEach(t => t.classList.remove("active"));
+                panels.forEach(p => p.classList.remove("active"));
+                
+                this.classList.add("active");
+                document.getElementById(`tab-${target}`).classList.add("active");
+            });
+        });
+
+        // Initialize Session
+        initSession();
+    </script>
+</body>
+</html>
