@@ -240,47 +240,59 @@ def build_pdf(filename="Panduan_Instalasi_KasPilot.pdf"):
     story.append(PageBreak())
 
     # ----------------------------------------------------
-    # HALAMAN 4: LANGKAH 2 - DEPLOY WEB APP
+    # HALAMAN 4: LANGKAH 2 - PASANG LIBRARY KASPILOT
     # ----------------------------------------------------
-    story.append(Paragraph("3. Langkah 2: Deploy Google Apps Script", h1_style))
+    story.append(Paragraph("3. Langkah 2: Pasang Library KasPilot", h1_style))
     story.append(Paragraph(
-        "Setelah memiliki salinan spreadsheet, kita perlu mendeploy kode Google Apps Script di dalamnya agar bertindak sebagai jembatan "
-        "antara Telegram dan Spreadsheet.", body_style))
+        "Setelah memiliki salinan spreadsheet, hubungkan script pembeli dengan Library resmi KasPilot dari penjual.", body_style))
     
     story.append(Paragraph("Langkah detail:", h2_style))
     story.append(Paragraph("1. Di halaman Google Spreadsheet Anda, buka menu <b>Extensions (Ekstensi)</b> &gt; klik <b>Apps Script</b>.", bullet_style))
-    story.append(Paragraph("2. Halaman editor Google Apps Script akan terbuka di tab baru. Seluruh kode bot sudah terisi di sana secara otomatis.", bullet_style))
-    story.append(Paragraph("3. Di pojok kanan atas halaman Apps Script, klik tombol <b>Deploy</b> &gt; klik <b>New deployment</b>.", bullet_style))
-    story.append(Paragraph("4. Pada jendela pop-up yang muncul, pastikan jenis deployment adalah <b>Web app</b> (klik ikon gir jika belum).", bullet_style))
-    story.append(Paragraph("5. Konfigurasikan tiga kolom berikut dengan tepat:", bullet_style))
-    story.append(Paragraph("&bull; <b>Description</b>: Isi bebas, misal: <i>v2.0</i>", bullet_style))
-    story.append(Paragraph("&bull; <b>Execute as</b>: Pilih <b>Me (email Anda@gmail.com)</b>", bullet_style))
-    story.append(Paragraph("&bull; <b>Who has access</b>: Wajib pilih <b>Anyone (Siapa saja)</b>", bullet_style))
-    story.append(Paragraph("6. Klik tombol **Deploy** di bagian bawah.", bullet_style))
-    story.append(Paragraph("7. Jendela otorisasi akses Google akan muncul. Klik <b>Authorize Access</b> &gt; Pilih Akun Google Anda &gt; Klik <b>Advanced</b> di bagian kiri bawah &gt; Klik <b>Go to KasPilot (unsafe)</b> &gt; Klik <b>Allow</b>.", bullet_style))
-    story.append(Paragraph("8. Setelah proses selesai, **Salin Web App URL** yang diberikan. Simpan URL ini karena akan dimasukkan ke Setup Wizard.", bullet_style))
+    story.append(Paragraph("2. Di panel kiri Apps Script, klik ikon tambah pada bagian <b>Libraries</b>.", bullet_style))
+    story.append(Paragraph("3. Masukkan <b>Script ID Library</b> yang dikirim admin setelah pembayaran.", bullet_style))
+    story.append(Paragraph("4. Pada kolom identifier, isi persis: <code>KasPilotLibrary</code>.", bullet_style))
+    story.append(Paragraph("5. Pilih versi <b>Latest / Active</b>, lalu klik <b>Add</b>.", bullet_style))
     story.append(PageBreak())
 
     # ----------------------------------------------------
-    # HALAMAN 5: LANGKAH 3 - SETUP WIZARD & WEBHOOK
+    # HALAMAN 5: LANGKAH 3 - DEPLOY WEB APP
     # ----------------------------------------------------
-    story.append(Paragraph("4. Langkah 3: Setup Wizard & Aktivasi Webhook", h1_style))
+    story.append(Paragraph("4. Langkah 3: Deploy Google Apps Script", h1_style))
     story.append(Paragraph(
-        "Langkah terakhir adalah mengaktifkan webhook Telegram menggunakan Setup Wizard terintegrasi.", body_style))
+        "Deploy Web App agar Telegram dan dashboard dapat terhubung ke spreadsheet pembeli.", body_style))
     
     story.append(Paragraph("Langkah detail:", h2_style))
-    story.append(Paragraph("1. Tempelkan (Paste) **Web App URL** yang telah Anda salin sebelumnya ke tab browser baru Anda.", bullet_style))
-    story.append(Paragraph("2. Layar PIN Akses akan muncul. Masukkan PIN bawaan Anda (Anda dapat mengecek PIN awal pada dokumen penjualan).", bullet_style))
-    story.append(Paragraph("3. Setelah masuk, halaman **Setup Wizard** akan terbuka. Masukkan data berikut:", bullet_style))
-    story.append(Paragraph("&bull; <b>Nama Produk</b>: Masukkan nama aplikasi Anda (misal: <i>KasPilot</i>).", bullet_style))
-    story.append(Paragraph("&bull; <b>PIN Dashboard</b>: Buat PIN baru 4-8 angka keamanan untuk mengunci dashboard Anda.", bullet_style))
+    story.append(Paragraph("1. Di pojok kanan atas Apps Script, klik tombol <b>Deploy</b> &gt; <b>New deployment</b>.", bullet_style))
+    story.append(Paragraph("2. Pada jendela pop-up, pilih jenis deployment <b>Web app</b>.", bullet_style))
+    story.append(Paragraph("3. Konfigurasikan tiga kolom berikut dengan tepat:", bullet_style))
+    story.append(Paragraph("&bull; <b>Description</b>: Isi bebas, misal: <i>KasPilot Web App v1</i>", bullet_style))
+    story.append(Paragraph("&bull; <b>Execute as</b>: Pilih <b>Me (email Anda@gmail.com)</b>", bullet_style))
+    story.append(Paragraph("&bull; <b>Who has access</b>: Wajib pilih <b>Anyone (Siapa saja)</b>", bullet_style))
+    story.append(Paragraph("4. Klik tombol <b>Deploy</b> di bagian bawah.", bullet_style))
+    story.append(Paragraph("5. Jika muncul otorisasi Google, klik <b>Authorize Access</b> &gt; pilih akun Google Anda &gt; <b>Advanced</b> &gt; <b>Go to KasPilot (unsafe)</b> &gt; <b>Allow</b>.", bullet_style))
+    story.append(Paragraph("6. Setelah proses selesai, salin <b>Web App URL</b> yang diberikan.", bullet_style))
+    story.append(PageBreak())
+
+    # ----------------------------------------------------
+    # HALAMAN 6: LANGKAH 4 - SETUP WIZARD & WEBHOOK
+    # ----------------------------------------------------
+    story.append(Paragraph("5. Langkah 4: Setup Wizard & Aktivasi Webhook", h1_style))
+    story.append(Paragraph(
+        "Langkah terakhir adalah memasukkan License Key, token bot Telegram, dan mengaktifkan webhook.", body_style))
+    
+    story.append(Paragraph("Langkah detail:", h2_style))
+    story.append(Paragraph("1. Tempelkan <b>Web App URL</b> yang telah Anda salin ke tab browser baru.", bullet_style))
+    story.append(Paragraph("2. Halaman <b>Setup Wizard</b> akan terbuka. Masukkan data berikut:", bullet_style))
+    story.append(Paragraph("&bull; <b>License Key</b>: Tempelkan kode lisensi pribadi dari admin, contoh <code>KP-ABCD-1234</code>.", bullet_style))
+    story.append(Paragraph("&bull; <b>Nama Produk</b>: Masukkan nama aplikasi Anda, misal: <i>KasPilot</i>.", bullet_style))
+    story.append(Paragraph("&bull; <b>PIN Dashboard</b>: Buat PIN baru 4-8 angka untuk mengunci dashboard.", bullet_style))
     story.append(Paragraph("&bull; <b>Bot Token Telegram</b>: Tempelkan token yang Anda dapat dari BotFather.", bullet_style))
-    story.append(Paragraph("&bull; <b>Spreadsheet ID</b>: Tempelkan ID Spreadsheet yang didapat di Langkah 1.", bullet_style))
+    story.append(Paragraph("&bull; <b>Spreadsheet ID</b>: Boleh dikosongkan jika Setup Wizard otomatis membaca spreadsheet aktif.", bullet_style))
     story.append(Paragraph("&bull; <b>Gemini / Groq API Key</b>: Isi jika ingin memakai pencatatan suara / foto struk.", bullet_style))
     story.append(Paragraph("&bull; <b>Web App URL</b>: Isi otomatis dari link halaman saat ini.", bullet_style))
-    story.append(Paragraph("4. Klik tombol <b>Simpan Setup</b>. Data akan disimpan aman di memori internal script Google Anda.", bullet_style))
-    story.append(Paragraph("5. Klik tombol <b>Set Webhook</b> untuk menghubungkan bot Telegram Anda dengan script Google.", bullet_style))
-    story.append(Paragraph("6. Terakhir, klik <b>Cek Setup</b> untuk memastikan status integrasi sukses (berwarna hijau).", bullet_style))
+    story.append(Paragraph("3. Klik tombol <b>Simpan Setup</b>. Konfigurasi disimpan di sheet tersembunyi pada spreadsheet Anda.", bullet_style))
+    story.append(Paragraph("4. Klik tombol <b>Set Webhook</b> untuk menghubungkan bot Telegram dengan Web App.", bullet_style))
+    story.append(Paragraph("5. Terakhir, klik <b>Cek Setup</b> untuk memastikan status integrasi sukses.", bullet_style))
     
     # Setup Image (Centered)
     if os.path.exists("setup_wizard.jpg"):
@@ -292,9 +304,9 @@ def build_pdf(filename="Panduan_Instalasi_KasPilot.pdf"):
     story.append(PageBreak())
 
     # ----------------------------------------------------
-    # HALAMAN 6: CARA PENGGUNAAN & PENDUKUNG
+    # HALAMAN 7: CARA PENGGUNAAN & PENDUKUNG
     # ----------------------------------------------------
-    story.append(Paragraph("5. Panduan Penggunaan & Tips Keuangan", h1_style))
+    story.append(Paragraph("6. Panduan Penggunaan & Tips Keuangan", h1_style))
     story.append(Paragraph(
         "Selamat! Bot Anda kini sudah aktif sepenuhnya. Buka chat Telegram dengan Bot Anda, ketik tombol <code>/start</code> "
         "dan Anda dapat segera melakukan pencatatan keuangan.", body_style))

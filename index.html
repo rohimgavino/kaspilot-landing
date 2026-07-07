@@ -75,6 +75,7 @@
         .btn-cta-nav {
             padding: 10px 20px;
             font-size: 14px;
+            font-family: var(--font-body);
             font-weight: 700;
             background: linear-gradient(135deg, #4f46e5, #6366f1);
             color: white;
@@ -144,6 +145,7 @@
         .btn-primary {
             padding: 16px 32px;
             font-size: 16px;
+            font-family: var(--font-body);
             font-weight: 700;
             background: linear-gradient(135deg, #10b981, #059669);
             color: white;
@@ -163,6 +165,7 @@
         .btn-secondary {
             padding: 16px 32px;
             font-size: 16px;
+            font-family: var(--font-body);
             font-weight: 700;
             background: rgba(255, 255, 255, 0.05);
             color: white;
@@ -501,6 +504,7 @@
             width: 100%;
             padding: 16px;
             font-size: 16px;
+            font-family: var(--font-body);
             font-weight: 700;
             background: linear-gradient(135deg, #10b981, #059669);
             color: white;
@@ -516,6 +520,288 @@
         .btn-pricing-cta:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(16, 185, 129, 0.45);
+        }
+
+        .payment-note {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px;
+            margin: -20px 0 24px;
+            text-align: center;
+        }
+
+        .payment-pill {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 8px;
+            padding: 8px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .checkout-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: rgba(3, 7, 18, 0.82);
+            backdrop-filter: blur(14px);
+        }
+
+        .checkout-overlay.active {
+            display: flex;
+        }
+
+        .checkout-modal {
+            width: min(920px, 100%);
+            max-height: min(92vh, 880px);
+            overflow-y: auto;
+            background: #0b1120;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+        }
+
+        .checkout-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .checkout-eyebrow {
+            color: #a5b4fc;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 6px;
+        }
+
+        .checkout-title {
+            font-family: var(--font-head);
+            font-size: 24px;
+            line-height: 1.2;
+        }
+
+        .checkout-close {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.06);
+            color: white;
+            cursor: pointer;
+            font-size: 22px;
+            line-height: 1;
+        }
+
+        .checkout-body {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 360px;
+            gap: 24px;
+            padding: 24px;
+        }
+
+        .checkout-panel {
+            background: rgba(255, 255, 255, 0.035);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .checkout-panel h3 {
+            font-family: var(--font-head);
+            font-size: 18px;
+            margin-bottom: 14px;
+        }
+
+        .checkout-form {
+            display: grid;
+            gap: 14px;
+        }
+
+        .form-field {
+            display: grid;
+            gap: 6px;
+        }
+
+        .form-field label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-secondary);
+        }
+
+        .form-field input {
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(2, 6, 23, 0.65);
+            color: white;
+            border-radius: 8px;
+            padding: 12px 14px;
+            font: inherit;
+        }
+
+        .form-field input:focus {
+            outline: none;
+            border-color: rgba(99, 102, 241, 0.75);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        }
+
+        .method-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .method-option {
+            min-height: 82px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.04);
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            padding: 12px;
+            font: inherit;
+        }
+
+        .method-option strong,
+        .method-option span {
+            display: block;
+        }
+
+        .method-option strong {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .method-option span {
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+
+        .method-option.active {
+            border-color: rgba(16, 185, 129, 0.8);
+            background: rgba(16, 185, 129, 0.12);
+        }
+
+        .order-summary {
+            display: grid;
+            gap: 12px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .summary-row strong {
+            color: white;
+        }
+
+        .summary-total {
+            margin-top: 4px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border-color);
+            font-size: 18px;
+            color: white;
+        }
+
+        .checkout-result {
+            display: none;
+            margin-top: 18px;
+            gap: 16px;
+        }
+
+        .checkout-result.active {
+            display: grid;
+        }
+
+        .qris-box {
+            display: none;
+            justify-items: center;
+            gap: 10px;
+            padding: 18px;
+            background: white;
+            border-radius: 12px;
+            color: #111827;
+        }
+
+        .qris-box.active {
+            display: grid;
+        }
+
+        .qris-box img {
+            width: min(260px, 100%);
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .pay-info {
+            display: grid;
+            gap: 10px;
+            border: 1px dashed rgba(16, 185, 129, 0.45);
+            border-radius: 10px;
+            padding: 14px;
+            background: rgba(16, 185, 129, 0.08);
+        }
+
+        .pay-info p {
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        .copy-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .copy-value {
+            min-width: 0;
+            overflow-wrap: anywhere;
+            color: white;
+            font-weight: 700;
+        }
+
+        .btn-copy {
+            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+            border-radius: 8px;
+            padding: 8px 10px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .btn-checkout-submit,
+        .btn-confirm-payment {
+            width: 100%;
+            border: none;
+            border-radius: 10px;
+            padding: 14px 16px;
+            cursor: pointer;
+            color: white;
+            font-weight: 800;
+            font-size: 15px;
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .btn-confirm-payment {
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
         }
 
         /* FAQ Section */
@@ -606,6 +892,13 @@
 
         /* Responsive Breakpoints */
         @media (max-width: 768px) {
+            .checkout-body {
+                grid-template-columns: 1fr;
+            }
+            .method-grid,
+            .payment-note {
+                grid-template-columns: 1fr;
+            }
             .step-row {
                 flex-direction: column;
                 align-items: center;
@@ -628,7 +921,7 @@
             <div class="logo">
                 🚀 KasPilot
             </div>
-            <a href="https://wa.me/628991977560?text=Halo%20saya%20tertarik%20membeli%20bot%20KasPilot" class="btn-cta-nav js-wa-link" data-wa-text="Halo saya tertarik membeli bot KasPilot" target="_blank">Beli Sekarang</a>
+            <button type="button" class="btn-cta-nav js-open-checkout">Beli Sekarang</button>
         </div>
     </header>
 
@@ -641,8 +934,8 @@
             <h1 class="hero-title">Catat Transaksi Bulanan Semudah Chat di Telegram!</h1>
             <p class="hero-desc">Lupakan spreadsheet yang rumit dan aplikasi keuangan yang membingungkan. Catat transaksi lewat ketikan biasa, kirim Voice Note, atau foto struk belanjaan. Dashboard visual terupdate otomatis secara real-time.</p>
             <div class="hero-actions">
-                <a href="https://wa.me/628991977560?text=Halo%20saya%20tertarik%20membeli%20bot%20KasPilot" class="btn-primary js-wa-link" data-wa-text="Halo saya tertarik membeli bot KasPilot" target="_blank">Dapatkan Akses Instan</a>
-                <a href="https://wa.me/628991977560?text=Halo%20admin%2C%20saya%20sudah%20bayar%20dan%20ingin%20akses%20template%20KasPilot" class="btn-secondary js-wa-link" data-wa-text="Halo admin, saya sudah bayar dan ingin akses template KasPilot" target="_blank">Minta Akses Setelah Bayar</a>
+                <button type="button" class="btn-primary js-open-checkout">Dapatkan Akses Instan</button>
+                <a href="https://wa.me/628991977560?text=Halo%20admin%2C%20saya%20sudah%20bayar%20dan%20ingin%20akses%20template%20KasPilot" class="btn-secondary js-wa-link" data-wa-text="Halo admin, saya sudah bayar dan ingin paket aktivasi KasPilot: template, license key, dan Script ID Library" target="_blank">Minta Akses Setelah Bayar</a>
                 <a href="#fitur" class="btn-secondary">Pelajari Fitur</a>
             </div>
 
@@ -713,8 +1006,8 @@
         <div class="container">
             <div class="section-head">
                 <span class="section-tag">Cara Kerja</span>
-                <h2 class="section-title">Setup Instan Kurang Dari 3 Menit</h2>
-                <p class="section-desc">Tidak butuh hosting, tidak butuh pengetahuan coding. Anda hanya menyalin dokumen yang kami berikan.</p>
+                <h2 class="section-title">Aktivasi Berlisensi, Data Tetap di Akun Anda</h2>
+                <p class="section-desc">Setelah pembayaran terkonfirmasi, admin mengirim template, License Key, dan panduan. Pembeli cukup menyalin spreadsheet, memasang library resmi, lalu mengaktifkan bot dari Setup Wizard.</p>
             </div>
 
             <div class="steps-container">
@@ -722,24 +1015,32 @@
                 <div class="step-row">
                     <div class="step-number">1</div>
                     <div class="step-content">
-                        <h3 class="step-title">Bayar & Terima Link Template</h3>
-                        <p class="step-desc">Setelah pembayaran terkonfirmasi, admin akan mengirim link Make a Copy spreadsheet master KasPilot agar template tetap aman dan tidak tersebar publik.</p>
+                        <h3 class="step-title">Bayar & Terima Paket Aktivasi</h3>
+                        <p class="step-desc">Admin mengirim link Make a Copy template, License Key pribadi, Script ID Library resmi, dan panduan singkat setelah pembayaran terkonfirmasi.</p>
                     </div>
                 </div>
                 <!-- Step 2 -->
                 <div class="step-row">
                     <div class="step-number">2</div>
                     <div class="step-content">
-                        <h3 class="step-title">Deploy Web App</h3>
-                        <p class="step-desc">Buka menu Apps Script yang tersemat otomatis pada spreadsheet baru Anda, klik tombol **Deploy > New deployment** sebagai Web App hanya dalam hitungan detik.</p>
+                        <h3 class="step-title">Copy Template & Pasang Library</h3>
+                        <p class="step-desc">Buat salinan spreadsheet ke Google Drive Anda, buka Apps Script, lalu tambahkan Library dengan identifier KasPilotLibrary sesuai panduan admin.</p>
                     </div>
                 </div>
                 <!-- Step 3 -->
                 <div class="step-row">
                     <div class="step-number">3</div>
                     <div class="step-content">
-                        <h3 class="step-title">Setup via Wizard & Mulai Catat!</h3>
-                        <p class="step-desc">Buka halaman setup interaktif untuk memasukkan PIN dashboard dan token Telegram. Hubungkan bot Anda dan mulailah mengirimkan catatan pertama Anda!</p>
+                        <h3 class="step-title">Deploy Web App</h3>
+                        <p class="step-desc">Deploy Apps Script sebagai Web App dari akun Google Anda sendiri, salin URL Web App, lalu buka halaman aktivasi KasPilot.</p>
+                    </div>
+                </div>
+                <!-- Step 4 -->
+                <div class="step-row">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Isi Setup Wizard & Set Webhook</h3>
+                        <p class="step-desc">Masukkan License Key, token bot Telegram, dan PIN dashboard. Setelah tersimpan, klik Set Webhook dan KasPilot siap menerima catatan transaksi.</p>
                     </div>
                 </div>
             </div>
@@ -747,13 +1048,13 @@
             <div class="setup-actions">
                 <div class="setup-card">
                     <strong>Akses Template Setelah Bayar</strong>
-                    <p>Link Make a Copy tidak ditampilkan publik. Kirim bukti pembayaran ke admin, lalu admin akan mengirim link salinan template.</p>
-                    <a href="https://wa.me/628991977560?text=Halo%20admin%2C%20saya%20sudah%20bayar%20dan%20ingin%20akses%20template%20KasPilot" class="btn-primary js-wa-link" data-wa-text="Halo admin, saya sudah bayar dan ingin akses template KasPilot" target="_blank">Klaim Link Template</a>
+                    <p>Link Make a Copy dan License Key tidak ditampilkan publik. Kirim bukti pembayaran, lalu admin akan mengirim paket aktivasi pembeli.</p>
+                    <button type="button" class="btn-primary js-open-checkout">Klaim Paket Aktivasi</button>
                 </div>
                 <div class="setup-card">
                     <strong>Butuh Bantuan Admin?</strong>
-                    <p>Hubungi admin jika perlu bantuan setup nomor bot, token Telegram, PIN dashboard, atau Spreadsheet ID.</p>
-                    <a href="https://wa.me/628991977560?text=Halo%20admin%2C%20saya%20butuh%20bantuan%20setup%20KasPilot" class="btn-secondary js-wa-link" data-wa-text="Halo admin, saya butuh bantuan setup KasPilot" target="_blank">Chat Admin</a>
+                    <p>Hubungi admin jika perlu bantuan memasang Library, deploy Web App, mengisi License Key, token Telegram, PIN dashboard, atau Set Webhook.</p>
+                    <a href="https://wa.me/628991977560?text=Halo%20admin%2C%20saya%20butuh%20bantuan%20setup%20KasPilot" class="btn-secondary js-wa-link" data-wa-text="Halo admin, saya butuh bantuan setup KasPilot sampai bot Telegram aktif" target="_blank">Chat Admin</a>
                 </div>
             </div>
         </div>
@@ -771,23 +1072,28 @@
             <div class="pricing-card">
                 <span class="pricing-badge">PROMO TERBATAS</span>
                 <h3 class="price-title">KasPilot Master Template</h3>
-                <p class="price-desc">Akses penuh ke Spreadsheet Master, script bot otomatis, dashboard premium, dan panduan setup langkah-demi-langkah.</p>
+                <p class="price-desc">Akses ke template Google Sheets, License Key pribadi, Library resmi KasPilot, dashboard premium, dan panduan aktivasi langkah demi langkah.</p>
                 <div class="price-val">
                     <span class="price-original">Rp299.000</span>
                     <span class="price-discount">Rp99.000</span>
                     <span class="price-period">/ sekali bayar</span>
                 </div>
                 <ul class="features-list">
-                    <li>Semua File Script Bot Telegram Aktif</li>
+                    <li>License Key Pribadi untuk Aktivasi</li>
                     <li>Spreadsheet Template & Log Error</li>
+                    <li>Akses Library Resmi KasPilot</li>
                     <li>Dashboard Visual Premium Terintegrasi</li>
                     <li>Mendukung Input Teks, Voice Note, & Foto</li>
                     <li>Sistem Multi-User (Keluarga & Usaha)</li>
                     <li>Panduan Instalasi Lengkap (PDF & Video)</li>
-                    <li>Lisensi Penggunaan Selamanya (Lifetime)</li>
+                    <li>Lisensi Lifetime untuk 1 Spreadsheet Aktif</li>
                 </ul>
-                <!-- Ganti link dengan chat WhatsApp Anda untuk menerima pesanan -->
-                <a href="https://wa.me/628991977560?text=Halo%20saya%20ingin%20membeli%20bot%20KasPilot%20promo%2099rb" class="btn-pricing-cta js-wa-link" data-wa-text="Halo saya ingin membeli bot KasPilot promo 99rb" target="_blank">Miliki Sekarang Juga</a>
+                <div class="payment-note">
+                    <span class="payment-pill">QRIS custom</span>
+                    <span class="payment-pill">Transfer bank</span>
+                    <span class="payment-pill">Konfirmasi WA</span>
+                </div>
+                <button type="button" class="btn-pricing-cta js-open-checkout">Miliki Sekarang Juga</button>
             </div>
         </div>
     </section>
@@ -842,6 +1148,16 @@
                         Sangat bisa. Kami telah mendesain Setup Wizard interaktif yang membimbing Anda mengisi parameter. Anda hanya perlu mengikuti petunjuk teks dan video panduan kami yang berdurasi kurang dari 3 menit.
                     </div>
                 </div>
+                <!-- FAQ 5 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Bagaimana sistem License Key bekerja?</span>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Setiap pembeli mendapatkan License Key pribadi. Saat Setup Wizard dijalankan pertama kali, lisensi akan terikat ke spreadsheet pembeli sehingga akses tetap rapi dan tidak bisa dipakai sembarang salinan.
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -857,15 +1173,340 @@
         </div>
     </footer>
 
+    <div class="checkout-overlay" id="checkout-modal" aria-hidden="true">
+        <div class="checkout-modal" role="dialog" aria-modal="true" aria-labelledby="checkout-title">
+            <div class="checkout-head">
+                <div>
+                    <div class="checkout-eyebrow">Checkout KasPilot</div>
+                    <h2 class="checkout-title" id="checkout-title">Lengkapi data, pilih pembayaran, lalu konfirmasi ke admin</h2>
+                </div>
+                <button type="button" class="checkout-close" id="checkout-close" aria-label="Tutup checkout">&times;</button>
+            </div>
+            <div class="checkout-body">
+                <div class="checkout-panel">
+                    <h3>Data Pembeli</h3>
+                    <form class="checkout-form" id="checkout-form">
+                        <div class="form-field">
+                            <label for="buyer-name">Nama lengkap</label>
+                            <input id="buyer-name" name="name" type="text" autocomplete="name" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="buyer-wa">Nomor WhatsApp aktif</label>
+                            <input id="buyer-wa" name="whatsapp" type="tel" autocomplete="tel" placeholder="08xxxxxxxxxx" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="buyer-email">Email pengiriman panduan</label>
+                            <input id="buyer-email" name="email" type="email" autocomplete="email" required>
+                        </div>
+                        <div class="form-field">
+                            <label>Metode pembayaran</label>
+                            <div class="method-grid" id="payment-methods">
+                                <button type="button" class="method-option active" data-method="qris">
+                                    <strong>QRIS</strong>
+                                    <span>Nominal otomatis</span>
+                                </button>
+                                <button type="button" class="method-option" data-method="bank">
+                                    <strong>Bank</strong>
+                                    <span>Transfer rekening</span>
+                                </button>
+                                <button type="button" class="method-option" data-method="manual">
+                                    <strong>Manual</strong>
+                                    <span>Atur via admin</span>
+                                </button>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-checkout-submit">Lanjutkan Pembayaran</button>
+                    </form>
+
+                    <div class="checkout-result" id="checkout-result">
+                        <div class="pay-info" id="payment-info"></div>
+                        <div class="qris-box" id="qris-box">
+                            <img id="qris-image" alt="QRIS pembayaran KasPilot">
+                            <strong id="qris-merchant">QRIS Merchant</strong>
+                        </div>
+                        <button type="button" class="btn-confirm-payment" id="confirm-payment">Konfirmasi Pembayaran via WhatsApp</button>
+                    </div>
+                </div>
+
+                <aside class="checkout-panel">
+                    <h3>Ringkasan Pesanan</h3>
+                    <div class="order-summary">
+                        <div class="summary-row">
+                            <span>Produk</span>
+                            <strong id="summary-product">KasPilot Master Template</strong>
+                        </div>
+                        <div class="summary-row">
+                            <span>Harga promo</span>
+                            <strong id="summary-price">Rp99.000</strong>
+                        </div>
+                        <div class="summary-row">
+                            <span>Kode unik</span>
+                            <strong id="summary-unique">+Rp0</strong>
+                        </div>
+                        <div class="summary-row summary-total">
+                            <span>Total bayar</span>
+                            <strong id="summary-total">Rp99.000</strong>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Admin settings: ubah nilai di sini untuk mengganti nomor HP, link template, dan identitas admin.
+        // Admin settings: ubah nilai di sini untuk mengganti nomor HP, harga, QRIS, rekening, link template, dan Script ID Library.
         const ADMIN_SETTINGS = {
             whatsappNumber: "628991977560",
             adminName: "Admin KasPilot",
-            // Link ini hanya untuk admin. Jangan tampilkan langsung di halaman publik.
+            productName: "KasPilot Master Template",
+            basePrice: 99000,
+            useUniqueCode: true,
+            buyerLibraryScriptId: "ISI_SCRIPT_ID_LIBRARY_KASPILOT_DI_SINI",
             spreadsheetTemplateCopyUrl: "https://docs.google.com/spreadsheets/d/1VErcdQ0N2BKTbmLO4OJatEpmYpuv2q7XAU3t4CsO1Y4/copy",
-            spreadsheetTemplateEditUrl: "https://docs.google.com/spreadsheets/d/1VErcdQ0N2BKTbmLO4OJatEpmYpuv2q7XAU3t4CsO1Y4/edit?gid=875839274#gid=875839274"
+            spreadsheetTemplateEditUrl: "https://docs.google.com/spreadsheets/d/1VErcdQ0N2BKTbmLO4OJatEpmYpuv2q7XAU3t4CsO1Y4/edit?gid=875839274#gid=875839274",
+            payment: {
+                qris: {
+                    enabled: true,
+                    merchantName: "KasPilot",
+                    // Tempel payload QRIS statis merchant di sini. Jika kosong, metode QRIS akan menampilkan instruksi hubungi admin.
+                    staticPayload: ""
+                },
+                bank: {
+                    enabled: true,
+                    bankName: "BCA",
+                    accountNumber: "0000000000",
+                    accountName: "NAMA PEMILIK REKENING"
+                },
+                manual: {
+                    enabled: true,
+                    label: "Manual via WhatsApp"
+                }
+            }
         };
+
+        const checkoutState = {
+            method: "qris",
+            buyer: {},
+            uniqueCode: 0,
+            total: ADMIN_SETTINGS.basePrice,
+            qrisPayload: ""
+        };
+
+        const rupiah = (value) => `Rp${Number(value || 0).toLocaleString("id-ID")}`;
+
+        function crc16CcittFalse(input) {
+            let crc = 0xffff;
+            for (let i = 0; i < input.length; i += 1) {
+                crc ^= input.charCodeAt(i) << 8;
+                for (let j = 0; j < 8; j += 1) {
+                    crc = (crc & 0x8000) !== 0 ? ((crc << 1) ^ 0x1021) : crc << 1;
+                    crc &= 0xffff;
+                }
+            }
+            return crc.toString(16).toUpperCase().padStart(4, "0");
+        }
+
+        function encodeTlv(id, value) {
+            if (String(value).length > 99) throw new Error(`Tag ${id} terlalu panjang.`);
+            return `${id}${String(value).length.toString().padStart(2, "0")}${value}`;
+        }
+
+        function readTlv(payload) {
+            const fields = [];
+            let index = 0;
+            while (index < payload.length) {
+                const id = payload.slice(index, index + 2);
+                const lengthText = payload.slice(index + 2, index + 4);
+                const length = parseInt(lengthText, 10);
+                if (!/^\d{2}$/.test(id) || !/^\d{2}$/.test(lengthText)) {
+                    throw new Error("Format payload QRIS tidak valid.");
+                }
+                const valueStart = index + 4;
+                const valueEnd = valueStart + length;
+                if (valueEnd > payload.length) throw new Error("Panjang payload QRIS tidak valid.");
+                const value = payload.slice(valueStart, valueEnd);
+                fields.push({ id, value, raw: payload.slice(index, valueEnd) });
+                index = valueEnd;
+            }
+            return fields;
+        }
+
+        function stripQrisCrc(payload) {
+            const normalized = String(payload || "").trim().replace(/[\r\n\t\s]/g, "");
+            const crcIndex = normalized.lastIndexOf("6304");
+            if (crcIndex < 0 || crcIndex + 8 !== normalized.length) {
+                throw new Error("Payload QRIS harus berakhir dengan tag CRC 6304.");
+            }
+            return normalized.slice(0, crcIndex);
+        }
+
+        function setTlvField(fields, id, value, afterId) {
+            const raw = encodeTlv(id, value);
+            const existingIndex = fields.findIndex((field) => field.id === id);
+            if (existingIndex >= 0) {
+                fields[existingIndex] = { id, value, raw };
+                return;
+            }
+            const afterIndex = fields.findIndex((field) => field.id === afterId);
+            if (afterIndex >= 0) {
+                fields.splice(afterIndex + 1, 0, { id, value, raw });
+                return;
+            }
+            fields.push({ id, value, raw });
+        }
+
+        function buildDynamicQris(staticPayload, amount) {
+            const body = stripQrisCrc(staticPayload);
+            const fields = readTlv(body);
+            setTlvField(fields, "01", "12", "00");
+            setTlvField(fields, "54", String(amount), "53");
+            const newBody = fields.map((field) => field.raw).join("");
+            return `${newBody}6304${crc16CcittFalse(`${newBody}6304`)}`;
+        }
+
+        function getQrisMerchantName(staticPayload) {
+            try {
+                const fields = readTlv(stripQrisCrc(staticPayload));
+                return fields.find((field) => field.id === "59")?.value || ADMIN_SETTINGS.payment.qris.merchantName;
+            } catch (error) {
+                return ADMIN_SETTINGS.payment.qris.merchantName;
+            }
+        }
+
+        function updateOrderSummary() {
+            document.getElementById("summary-product").textContent = ADMIN_SETTINGS.productName;
+            document.getElementById("summary-price").textContent = rupiah(ADMIN_SETTINGS.basePrice);
+            document.getElementById("summary-unique").textContent = `+${rupiah(checkoutState.uniqueCode)}`;
+            document.getElementById("summary-total").textContent = rupiah(checkoutState.total);
+        }
+
+        function openCheckoutModal() {
+            checkoutState.uniqueCode = 0;
+            checkoutState.total = ADMIN_SETTINGS.basePrice;
+            checkoutState.qrisPayload = "";
+            document.getElementById("checkout-result").classList.remove("active");
+            document.getElementById("payment-info").innerHTML = "";
+            document.getElementById("qris-box").classList.remove("active");
+            document.getElementById("checkout-modal").classList.add("active");
+            document.getElementById("checkout-modal").setAttribute("aria-hidden", "false");
+            document.body.style.overflow = "hidden";
+            updateOrderSummary();
+            setTimeout(() => document.getElementById("buyer-name").focus(), 50);
+        }
+
+        function closeCheckoutModal() {
+            document.getElementById("checkout-modal").classList.remove("active");
+            document.getElementById("checkout-modal").setAttribute("aria-hidden", "true");
+            document.body.style.overflow = "";
+        }
+
+        function selectPaymentMethod(method) {
+            checkoutState.method = method;
+            document.querySelectorAll(".method-option").forEach((button) => {
+                button.classList.toggle("active", button.dataset.method === method);
+            });
+            document.getElementById("checkout-result").classList.remove("active");
+        }
+
+        function copyText(value) {
+            navigator.clipboard?.writeText(value).catch(() => {});
+        }
+
+        function renderCopyRow(label, value) {
+            return `
+                <div class="copy-row">
+                    <div>
+                        <p>${label}</p>
+                        <div class="copy-value">${value}</div>
+                    </div>
+                    <button type="button" class="btn-copy" data-copy="${String(value).replace(/"/g, "&quot;")}">Salin</button>
+                </div>
+            `;
+        }
+
+        function renderPaymentInfo() {
+            const info = document.getElementById("payment-info");
+            const qrisBox = document.getElementById("qris-box");
+            qrisBox.classList.remove("active");
+
+            if (checkoutState.method === "qris") {
+                const payload = ADMIN_SETTINGS.payment.qris.staticPayload.trim();
+                let qrisMessage = "Scan QRIS di bawah, pastikan nominal sama, lalu konfirmasi via WhatsApp.";
+                if (ADMIN_SETTINGS.payment.qris.enabled && payload) {
+                    try {
+                        checkoutState.qrisPayload = buildDynamicQris(payload, checkoutState.total);
+                        document.getElementById("qris-image").src = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(checkoutState.qrisPayload)}`;
+                        document.getElementById("qris-merchant").textContent = getQrisMerchantName(payload);
+                        qrisBox.classList.add("active");
+                    } catch (error) {
+                        qrisMessage = `Payload QRIS belum valid: ${error.message}. Gunakan transfer bank atau hubungi admin.`;
+                    }
+                } else {
+                    qrisMessage = "QRIS belum diisi admin. Gunakan transfer bank atau lanjut konfirmasi manual via WhatsApp.";
+                }
+                info.innerHTML = `
+                    ${renderCopyRow("Total bayar", rupiah(checkoutState.total))}
+                    <p>${qrisMessage}</p>
+                `;
+                return;
+            }
+
+            if (checkoutState.method === "bank") {
+                const bank = ADMIN_SETTINGS.payment.bank;
+                info.innerHTML = `
+                    ${renderCopyRow("Total transfer", rupiah(checkoutState.total))}
+                    ${renderCopyRow(`${bank.bankName} a.n. ${bank.accountName}`, bank.accountNumber)}
+                    <p>Transfer sesuai total sampai kode unik agar mudah dicocokkan, lalu kirim bukti pembayaran via WhatsApp.</p>
+                `;
+                return;
+            }
+
+            info.innerHTML = `
+                ${renderCopyRow("Estimasi total", rupiah(checkoutState.total))}
+                <p>Pilih tombol konfirmasi untuk mengatur pembayaran manual dengan admin KasPilot.</p>
+            `;
+        }
+
+        function handleCheckoutSubmit(event) {
+            event.preventDefault();
+            const form = event.currentTarget;
+            const data = new FormData(form);
+            checkoutState.buyer = {
+                name: String(data.get("name") || "").trim(),
+                whatsapp: String(data.get("whatsapp") || "").trim(),
+                email: String(data.get("email") || "").trim()
+            };
+            checkoutState.uniqueCode = ADMIN_SETTINGS.useUniqueCode ? Math.floor(Math.random() * 800) + 101 : 0;
+            checkoutState.total = ADMIN_SETTINGS.basePrice + checkoutState.uniqueCode;
+            updateOrderSummary();
+            renderPaymentInfo();
+            document.getElementById("checkout-result").classList.add("active");
+        }
+
+        function confirmPaymentWhatsApp() {
+            const methodLabel = {
+                qris: "QRIS",
+                bank: "Transfer Bank",
+                manual: "Manual via WhatsApp"
+            }[checkoutState.method] || checkoutState.method;
+
+            const text = `Halo ${ADMIN_SETTINGS.adminName}, saya ingin konfirmasi pembelian *${ADMIN_SETTINGS.productName}*.
+
+*Data Pembeli:*
+- Nama: ${checkoutState.buyer.name || "-"}
+- WhatsApp: ${checkoutState.buyer.whatsapp || "-"}
+- Email: ${checkoutState.buyer.email || "-"}
+
+*Pembayaran:*
+- Metode: ${methodLabel}
+- Harga: ${rupiah(ADMIN_SETTINGS.basePrice)}
+- Kode unik: +${rupiah(checkoutState.uniqueCode)}
+- Total bayar: *${rupiah(checkoutState.total)}*
+
+Saya akan kirim bukti pembayaran di chat ini. Setelah terkonfirmasi, mohon dikirim paket aktivasi KasPilot: link Make a Copy template, License Key, Script ID Library, dan panduan setup.`;
+
+            window.open(`https://wa.me/${ADMIN_SETTINGS.whatsappNumber}?text=${encodeURIComponent(text)}`, "_blank");
+        }
 
         function applyAdminSettings() {
             document.querySelectorAll('.js-wa-link').forEach(link => {
@@ -873,6 +1514,26 @@
                 link.href = `https://wa.me/${ADMIN_SETTINGS.whatsappNumber}?text=${encodeURIComponent(text)}`;
                 link.setAttribute('aria-label', `${link.textContent.trim()} via ${ADMIN_SETTINGS.adminName}`);
             });
+            document.querySelectorAll(".js-open-checkout").forEach((button) => {
+                button.addEventListener("click", openCheckoutModal);
+            });
+            document.querySelectorAll(".method-option").forEach((button) => {
+                button.addEventListener("click", () => selectPaymentMethod(button.dataset.method));
+            });
+            document.getElementById("checkout-form").addEventListener("submit", handleCheckoutSubmit);
+            document.getElementById("checkout-close").addEventListener("click", closeCheckoutModal);
+            document.getElementById("checkout-modal").addEventListener("click", (event) => {
+                if (event.target.id === "checkout-modal") closeCheckoutModal();
+            });
+            document.getElementById("confirm-payment").addEventListener("click", confirmPaymentWhatsApp);
+            document.addEventListener("click", (event) => {
+                const copyButton = event.target.closest(".btn-copy");
+                if (copyButton) copyText(copyButton.dataset.copy || "");
+            });
+            document.addEventListener("keydown", (event) => {
+                if (event.key === "Escape") closeCheckoutModal();
+            });
+            updateOrderSummary();
         }
 
         applyAdminSettings();
@@ -894,6 +1555,6 @@
                 }
             });
         });
-    </script>
+</script>
 </body>
 </html>
