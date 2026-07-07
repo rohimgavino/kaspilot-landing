@@ -33,9 +33,29 @@ Untuk mengubah tautan pemesanan WhatsApp, harga, metode pembayaran, admin, dan t
 8. Ubah `spreadsheetTemplateCopyUrl` jika link template master berubah. Link ini hanya catatan internal untuk admin dan tidak ditampilkan sebagai tombol publik.
 9. Untuk membalas pembeli setelah pembayaran, salin format di `PAKET_SIAP_KIRIM_KASPILOT.md`, lalu ganti bagian License Key sesuai lisensi pembeli.
 
+### Panel Admin Lokal
+
+Landing page juga punya panel admin ringan untuk menguji/mengatur pembayaran tanpa membuka kode:
+
+```text
+https://rohimgavino.github.io/kaspilot-landing/?admin=1
+```
+
+Dari panel ini admin bisa mengubah:
+- nomor WhatsApp admin
+- nama admin dan nama produk
+- harga promo
+- rekening bank
+- payload QRIS statis
+- link template buyer
+- Script ID Library
+- kode unik aktif/tidak
+
+Catatan penting: karena website ini static GitHub Pages, pengaturan panel admin disimpan di `localStorage` browser admin. Agar perubahan berlaku permanen untuk semua pembeli, klik **Salin Config**, tempel hasilnya ke blok `ADMIN_DEFAULT_SETTINGS` di `index.html`, lalu push ulang ke GitHub.
+
 Contoh blok konfigurasi:
 ```js
-const ADMIN_SETTINGS = {
+const ADMIN_DEFAULT_SETTINGS = {
   whatsappNumber: "6285712345678",
   adminName: "Admin KasPilot",
   productName: "KasPilot Master Template",

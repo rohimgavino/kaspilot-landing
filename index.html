@@ -804,6 +804,82 @@
             text-align: center;
         }
 
+        .admin-launcher {
+            position: fixed;
+            right: 18px;
+            bottom: 18px;
+            z-index: 180;
+            display: none;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            background: rgba(15, 23, 42, 0.92);
+            color: white;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font: inherit;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+        }
+
+        .admin-launcher.active {
+            display: inline-flex;
+        }
+
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .form-field textarea,
+        .form-field select {
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(2, 6, 23, 0.65);
+            color: white;
+            border-radius: 8px;
+            padding: 12px 14px;
+            font: inherit;
+        }
+
+        .form-field textarea {
+            min-height: 96px;
+            resize: vertical;
+        }
+
+        .toggle-field {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .toggle-field input {
+            width: 18px;
+            height: 18px;
+        }
+
+        .admin-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .admin-actions .btn-secondary,
+        .admin-actions .btn-primary {
+            padding: 12px 16px;
+            font-size: 14px;
+        }
+
+        .admin-status {
+            margin-top: 12px;
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
         /* FAQ Section */
         .faq {
             padding: 100px 0;
@@ -896,7 +972,8 @@
                 grid-template-columns: 1fr;
             }
             .method-grid,
-            .payment-note {
+            .payment-note,
+            .admin-grid {
                 grid-template-columns: 1fr;
             }
             .step-row {
@@ -1253,9 +1330,95 @@
         </div>
     </div>
 
+    <button type="button" class="admin-launcher" id="admin-launcher">Admin</button>
+
+    <div class="checkout-overlay" id="admin-modal" aria-hidden="true">
+        <div class="checkout-modal" role="dialog" aria-modal="true" aria-labelledby="admin-title">
+            <div class="checkout-head">
+                <div>
+                    <div class="checkout-eyebrow">Panel Admin Lokal</div>
+                    <h2 class="checkout-title" id="admin-title">Pengaturan pembayaran KasPilot</h2>
+                </div>
+                <button type="button" class="checkout-close" id="admin-close" aria-label="Tutup panel admin">&times;</button>
+            </div>
+            <div class="checkout-body">
+                <div class="checkout-panel">
+                    <h3>Konfigurasi Penjualan</h3>
+                    <form class="checkout-form" id="admin-form">
+                        <div class="admin-grid">
+                            <div class="form-field">
+                                <label for="admin-whatsapp">WhatsApp admin</label>
+                                <input id="admin-whatsapp" name="whatsappNumber" type="text" placeholder="628xxxxxxxxxx">
+                            </div>
+                            <div class="form-field">
+                                <label for="admin-name">Nama admin</label>
+                                <input id="admin-name" name="adminName" type="text">
+                            </div>
+                            <div class="form-field">
+                                <label for="admin-product">Nama produk</label>
+                                <input id="admin-product" name="productName" type="text">
+                            </div>
+                            <div class="form-field">
+                                <label for="admin-price">Harga promo</label>
+                                <input id="admin-price" name="basePrice" type="number" min="0" step="1000">
+                            </div>
+                            <div class="form-field">
+                                <label for="admin-bank-name">Bank</label>
+                                <input id="admin-bank-name" name="bankName" type="text">
+                            </div>
+                            <div class="form-field">
+                                <label for="admin-account-number">Nomor rekening</label>
+                                <input id="admin-account-number" name="accountNumber" type="text">
+                            </div>
+                            <div class="form-field">
+                                <label for="admin-account-name">Nama pemilik rekening</label>
+                                <input id="admin-account-name" name="accountName" type="text">
+                            </div>
+                            <div class="form-field">
+                                <label for="admin-template-copy">Link template buyer</label>
+                                <input id="admin-template-copy" name="spreadsheetTemplateCopyUrl" type="url">
+                            </div>
+                            <div class="form-field">
+                                <label for="admin-library-id">Script ID Library</label>
+                                <input id="admin-library-id" name="buyerLibraryScriptId" type="text">
+                            </div>
+                            <div class="form-field">
+                                <label for="admin-qris-merchant">Nama merchant QRIS</label>
+                                <input id="admin-qris-merchant" name="qrisMerchantName" type="text">
+                            </div>
+                        </div>
+                        <div class="form-field">
+                            <label for="admin-qris-payload">Payload QRIS statis</label>
+                            <textarea id="admin-qris-payload" name="qrisPayload" placeholder="Tempel teks payload QRIS statis di sini"></textarea>
+                        </div>
+                        <label class="toggle-field">
+                            <input id="admin-unique-code" name="useUniqueCode" type="checkbox">
+                            Pakai kode unik pada total bayar
+                        </label>
+                        <div class="admin-actions">
+                            <button type="submit" class="btn-primary">Simpan Pengaturan</button>
+                            <button type="button" class="btn-secondary" id="admin-copy-config">Salin Config</button>
+                            <button type="button" class="btn-secondary" id="admin-reset">Reset</button>
+                        </div>
+                    </form>
+                    <p class="admin-status" id="admin-status">Buka halaman dengan <code>?admin=1</code> untuk menampilkan panel ini.</p>
+                </div>
+                <aside class="checkout-panel">
+                    <h3>Catatan</h3>
+                    <div class="pay-info">
+                        <p>Pengaturan ini disimpan di browser admin dengan localStorage.</p>
+                        <p>Untuk membuat perubahan berlaku ke semua pembeli, salin config lalu simpan ke file website dan push ulang ke GitHub.</p>
+                        <p>Untuk QRIS dinamis, yang ditempel adalah payload teks QRIS statis, bukan gambar QR.</p>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Admin settings: ubah nilai di sini untuk mengganti nomor HP, harga, QRIS, rekening, link template, dan Script ID Library.
-        const ADMIN_SETTINGS = {
+        // Default admin settings. Panel ?admin=1 dapat menimpa nilai ini di browser admin via localStorage.
+        const ADMIN_STORAGE_KEY = "kaspilot_admin_settings";
+        const ADMIN_DEFAULT_SETTINGS = {
             whatsappNumber: "628991977560",
             adminName: "Admin KasPilot",
             productName: "KasPilot Master Template",
@@ -1283,6 +1446,40 @@
                 }
             }
         };
+
+        function cloneSettings(value) {
+            return JSON.parse(JSON.stringify(value));
+        }
+
+        function mergeSettings(base, override) {
+            const output = cloneSettings(base);
+            if (!override || typeof override !== "object") return output;
+            Object.keys(override).forEach((key) => {
+                if (
+                    override[key] &&
+                    typeof override[key] === "object" &&
+                    !Array.isArray(override[key]) &&
+                    output[key] &&
+                    typeof output[key] === "object"
+                ) {
+                    output[key] = mergeSettings(output[key], override[key]);
+                } else if (override[key] !== undefined) {
+                    output[key] = override[key];
+                }
+            });
+            return output;
+        }
+
+        function loadAdminSettings() {
+            try {
+                const saved = JSON.parse(localStorage.getItem(ADMIN_STORAGE_KEY) || "null");
+                return mergeSettings(ADMIN_DEFAULT_SETTINGS, saved);
+            } catch (error) {
+                return cloneSettings(ADMIN_DEFAULT_SETTINGS);
+            }
+        }
+
+        let ADMIN_SETTINGS = loadAdminSettings();
 
         const checkoutState = {
             method: "qris",
@@ -1508,12 +1705,97 @@ Saya akan kirim bukti pembayaran di chat ini. Setelah terkonfirmasi, mohon dikir
             window.open(`https://wa.me/${ADMIN_SETTINGS.whatsappNumber}?text=${encodeURIComponent(text)}`, "_blank");
         }
 
-        function applyAdminSettings() {
+        function isAdminMode() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get("admin") === "1" || window.location.hash === "#admin";
+        }
+
+        function openAdminModal() {
+            fillAdminForm();
+            document.getElementById("admin-modal").classList.add("active");
+            document.getElementById("admin-modal").setAttribute("aria-hidden", "false");
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeAdminModal() {
+            document.getElementById("admin-modal").classList.remove("active");
+            document.getElementById("admin-modal").setAttribute("aria-hidden", "true");
+            document.body.style.overflow = "";
+        }
+
+        function fillAdminForm() {
+            document.getElementById("admin-whatsapp").value = ADMIN_SETTINGS.whatsappNumber || "";
+            document.getElementById("admin-name").value = ADMIN_SETTINGS.adminName || "";
+            document.getElementById("admin-product").value = ADMIN_SETTINGS.productName || "";
+            document.getElementById("admin-price").value = ADMIN_SETTINGS.basePrice || 0;
+            document.getElementById("admin-bank-name").value = ADMIN_SETTINGS.payment.bank.bankName || "";
+            document.getElementById("admin-account-number").value = ADMIN_SETTINGS.payment.bank.accountNumber || "";
+            document.getElementById("admin-account-name").value = ADMIN_SETTINGS.payment.bank.accountName || "";
+            document.getElementById("admin-template-copy").value = ADMIN_SETTINGS.spreadsheetTemplateCopyUrl || "";
+            document.getElementById("admin-library-id").value = ADMIN_SETTINGS.buyerLibraryScriptId || "";
+            document.getElementById("admin-qris-merchant").value = ADMIN_SETTINGS.payment.qris.merchantName || "";
+            document.getElementById("admin-qris-payload").value = ADMIN_SETTINGS.payment.qris.staticPayload || "";
+            document.getElementById("admin-unique-code").checked = Boolean(ADMIN_SETTINGS.useUniqueCode);
+        }
+
+        function readAdminForm() {
+            return mergeSettings(ADMIN_SETTINGS, {
+                whatsappNumber: document.getElementById("admin-whatsapp").value.trim(),
+                adminName: document.getElementById("admin-name").value.trim(),
+                productName: document.getElementById("admin-product").value.trim(),
+                basePrice: Number(document.getElementById("admin-price").value || 0),
+                useUniqueCode: document.getElementById("admin-unique-code").checked,
+                buyerLibraryScriptId: document.getElementById("admin-library-id").value.trim(),
+                spreadsheetTemplateCopyUrl: document.getElementById("admin-template-copy").value.trim(),
+                payment: {
+                    qris: {
+                        enabled: true,
+                        merchantName: document.getElementById("admin-qris-merchant").value.trim(),
+                        staticPayload: document.getElementById("admin-qris-payload").value.trim()
+                    },
+                    bank: {
+                        enabled: true,
+                        bankName: document.getElementById("admin-bank-name").value.trim(),
+                        accountNumber: document.getElementById("admin-account-number").value.trim(),
+                        accountName: document.getElementById("admin-account-name").value.trim()
+                    }
+                }
+            });
+        }
+
+        function saveAdminForm(event) {
+            event.preventDefault();
+            ADMIN_SETTINGS = readAdminForm();
+            localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(ADMIN_SETTINGS));
+            document.getElementById("admin-status").textContent = "Pengaturan tersimpan di browser ini.";
+            refreshConfiguredContent();
+        }
+
+        function resetAdminSettings() {
+            localStorage.removeItem(ADMIN_STORAGE_KEY);
+            ADMIN_SETTINGS = cloneSettings(ADMIN_DEFAULT_SETTINGS);
+            fillAdminForm();
+            refreshConfiguredContent();
+            document.getElementById("admin-status").textContent = "Pengaturan dikembalikan ke default file.";
+        }
+
+        function copyAdminConfig() {
+            const configText = `const ADMIN_DEFAULT_SETTINGS = ${JSON.stringify(readAdminForm(), null, 4)};`;
+            copyText(configText);
+            document.getElementById("admin-status").textContent = "Config disalin. Tempel ke file jika ingin dipublish permanen.";
+        }
+
+        function refreshConfiguredContent() {
             document.querySelectorAll('.js-wa-link').forEach(link => {
                 const text = link.dataset.waText || "Halo admin, saya tertarik dengan KasPilot";
                 link.href = `https://wa.me/${ADMIN_SETTINGS.whatsappNumber}?text=${encodeURIComponent(text)}`;
                 link.setAttribute('aria-label', `${link.textContent.trim()} via ${ADMIN_SETTINGS.adminName}`);
             });
+            updateOrderSummary();
+        }
+
+        function applyAdminSettings() {
+            refreshConfiguredContent();
             document.querySelectorAll(".js-open-checkout").forEach((button) => {
                 button.addEventListener("click", openCheckoutModal);
             });
@@ -1531,12 +1813,27 @@ Saya akan kirim bukti pembayaran di chat ini. Setelah terkonfirmasi, mohon dikir
                 if (copyButton) copyText(copyButton.dataset.copy || "");
             });
             document.addEventListener("keydown", (event) => {
-                if (event.key === "Escape") closeCheckoutModal();
+                if (event.key === "Escape") {
+                    closeCheckoutModal();
+                    closeAdminModal();
+                }
             });
-            updateOrderSummary();
         }
 
         applyAdminSettings();
+
+        if (isAdminMode()) {
+            document.getElementById("admin-launcher").classList.add("active");
+        }
+
+        document.getElementById("admin-launcher").addEventListener("click", openAdminModal);
+        document.getElementById("admin-close").addEventListener("click", closeAdminModal);
+        document.getElementById("admin-modal").addEventListener("click", (event) => {
+            if (event.target.id === "admin-modal") closeAdminModal();
+        });
+        document.getElementById("admin-form").addEventListener("submit", saveAdminForm);
+        document.getElementById("admin-reset").addEventListener("click", resetAdminSettings);
+        document.getElementById("admin-copy-config").addEventListener("click", copyAdminConfig);
 
         // FAQ Accordion functionality
         const faqItems = document.querySelectorAll('.faq-item');
