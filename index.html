@@ -174,6 +174,13 @@
             cursor: pointer;
             text-decoration: none;
             transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
         }
 
         .btn-secondary:hover {
@@ -184,11 +191,17 @@
         .mockup-container {
             max-width: 950px;
             margin: 0 auto;
-            background: rgba(15, 23, 42, 0.5);
+            background: rgba(15, 23, 42, 0.35);
             border: 1px solid var(--border-color);
             padding: 12px;
             border-radius: 20px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 40px rgba(99, 102, 241, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 40px rgba(99, 102, 241, 0.15);
+            position: relative;
+            overflow: hidden;
+            min-height: 520px;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(8px);
         }
 
         .mockup-header {
@@ -196,6 +209,8 @@
             gap: 6px;
             margin-bottom: 12px;
             padding-left: 8px;
+            position: relative;
+            z-index: 15;
         }
 
         .dot {
@@ -213,6 +228,38 @@
             border-radius: 12px;
             display: block;
             border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: opacity 0.6s ease;
+        }
+        
+        .mockup-3d-canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+            opacity: 0;
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: auto;
+        }
+        
+        .mockup-container.webgl-active .mockup-img {
+            opacity: 0;
+            pointer-events: none;
+            position: absolute;
+            width: calc(100% - 24px);
+            left: 12px;
+            top: 50px;
+        }
+        
+        .mockup-container.webgl-active .mockup-3d-canvas-container {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .mockup-container {
+                min-height: 340px;
+            }
         }
 
         /* Features Section */
@@ -262,9 +309,11 @@
             border: 1px solid var(--border-color);
             padding: 32px;
             border-radius: 16px;
-            transition: all 0.3s ease;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease-out;
             position: relative;
             overflow: hidden;
+            transform-style: preserve-3d;
+            will-change: transform;
         }
 
         .feature-card::before {
@@ -277,10 +326,10 @@
             background: linear-gradient(135deg, rgba(99, 102, 241, 0.03), transparent);
             opacity: 0;
             transition: opacity 0.3s ease;
+            pointer-events: none;
         }
 
         .feature-card:hover {
-            transform: translateY(-5px);
             border-color: rgba(99, 102, 241, 0.3);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
@@ -1017,13 +1066,14 @@
             </div>
 
             <!-- Preview Dashboard Mockup -->
-            <div class="mockup-container">
+            <div class="mockup-container" id="mockup-container">
                 <div class="mockup-header">
                     <div class="dot dot-red"></div>
                     <div class="dot dot-yellow"></div>
                     <div class="dot dot-green"></div>
                 </div>
-                <img src="dashboard_mockup.jpg" alt="KasPilot Dashboard Mockup Preview" class="mockup-img">
+                <div id="hero-3d-canvas" class="mockup-3d-canvas-container"></div>
+                <img src="dashboard_mockup.jpg" alt="KasPilot Dashboard Mockup Preview" class="mockup-img" id="mockup-img">
             </div>
         </div>
     </section>
@@ -1418,6 +1468,10 @@
             </div>
         </div>
     </div>
+
+    <!-- Three.js and GSAP for Premium 3D UI/UX -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
     <script>
         // Default admin settings. Panel ?admin=1 dapat menimpa nilai ini di browser admin via localStorage.
@@ -1904,6 +1958,689 @@ Saya akan kirim bukti pembayaran di chat ini. Setelah terkonfirmasi, mohon dikir
                 }
             });
         });
+</script>
+
+<!-- New script block for Three.js 3D and Card Tilt effects -->
+<script>
+    (function() {
+        // Check if WebGL is supported
+        function isWebGLSupported() {
+            try {
+                const canvas = document.createElement('canvas');
+                return !!(window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
+            } catch (e) {
+                return false;
+            }
+        }
+
+        if (!isWebGLSupported()) {
+            console.log("WebGL not supported. Using 2D fallback.");
+            return;
+        }
+
+        const container = document.getElementById('hero-3d-canvas');
+        const mockupContainer = document.getElementById('mockup-container');
+        const fallbackImg = document.getElementById('mockup-img');
+        
+        if (!container || !mockupContainer || !fallbackImg) return;
+
+        // Setup Scene
+        const scene = new THREE.Scene();
+        
+        // Setup Camera
+        let width = container.clientWidth;
+        let height = container.clientHeight || 520;
+        const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 100);
+        camera.position.set(0, 0, 9);
+
+        // Setup Renderer
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
+        renderer.setSize(width, height);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        container.appendChild(renderer.domElement);
+
+        // Create Group for Mouse Parallax
+        const mainGroup = new THREE.Group();
+        scene.add(mainGroup);
+
+        // Lights
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.55);
+        scene.add(ambientLight);
+
+        // Directional Light
+        const dirLight = new THREE.DirectionalLight(0xffffff, 1.3);
+        dirLight.position.set(5, 8, 5);
+        dirLight.castShadow = true;
+        dirLight.shadow.mapSize.width = 1024;
+        dirLight.shadow.mapSize.height = 1024;
+        dirLight.shadow.bias = -0.001;
+        scene.add(dirLight);
+
+        // Neon Point Lights
+        const purpleLight = new THREE.PointLight(0x6366f1, 3.5, 12);
+        purpleLight.position.set(-3, 2, -2);
+        scene.add(purpleLight);
+
+        const greenLight = new THREE.PointLight(0x10b981, 3.5, 12);
+        greenLight.position.set(3, -2, -2);
+        scene.add(greenLight);
+
+        // 3D Objects Setup
+        let dashboardMesh, phoneMesh, telegramPlane, sheetsCard, micIcon;
+        const floatingObjects = [];
+
+        // Load Textures
+        const textureLoader = new THREE.TextureLoader();
+        
+        // Handle texture loading with fallback to solid color
+        textureLoader.load('dashboard_mockup.jpg', 
+            function(texture) {
+                createSceneObjects(texture);
+            },
+            undefined,
+            function(err) {
+                console.warn("Failed to load dashboard texture, using fallback color.", err);
+                createSceneObjects(null);
+            }
+        );
+
+        function createSceneObjects(dashboardTexture) {
+            // 1. Dashboard Laptop / Monitor Screen
+            const screenWidth = 5.2;
+            const screenHeight = 3.25;
+            const screenDepth = 0.12;
+
+            // Screen body (metallic back)
+            const bodyGeo = new THREE.BoxGeometry(screenWidth + 0.15, screenHeight + 0.15, screenDepth);
+            const bodyMat = new THREE.MeshPhysicalMaterial({
+                color: 0x1e293b,
+                metalness: 0.8,
+                roughness: 0.25,
+                clearcoat: 1.0,
+                clearcoatRoughness: 0.1
+            });
+            const screenBody = new THREE.Mesh(bodyGeo, bodyMat);
+            screenBody.castShadow = true;
+            screenBody.receiveShadow = true;
+            
+            // Actual Screen
+            const screenGeo = new THREE.PlaneGeometry(screenWidth, screenHeight);
+            let screenMat;
+            if (dashboardTexture) {
+                dashboardTexture.minFilter = THREE.LinearFilter;
+                screenMat = new THREE.MeshBasicMaterial({
+                    map: dashboardTexture,
+                    side: THREE.FrontSide
+                });
+            } else {
+                screenMat = new THREE.MeshBasicMaterial({
+                    color: 0x0f172a,
+                    side: THREE.FrontSide
+                });
+            }
+            const screenFace = new THREE.Mesh(screenGeo, screenMat);
+            screenFace.position.z = screenDepth / 2 + 0.005; // Slightly offset forward
+
+            dashboardMesh = new THREE.Group();
+            dashboardMesh.add(screenBody);
+            dashboardMesh.add(screenFace);
+            dashboardMesh.position.set(0, 0.2, 0);
+            dashboardMesh.rotation.set(0.05, -0.05, 0);
+            mainGroup.add(dashboardMesh);
+
+            // Add to floating elements list
+            floatingObjects.push({
+                mesh: dashboardMesh,
+                baseY: 0.2,
+                speed: 1.2,
+                amplitude: 0.12,
+                rotSpeedX: 0.05,
+                rotSpeedY: 0.04,
+                offset: 0
+            });
+
+            // 2. Telegram Phone
+            createTelegramPhone();
+
+            // 3. Floating Google Sheets Card
+            createSheetsCard();
+
+            // 4. Telegram Paper Plane
+            createPaperPlane();
+
+            // 5. Floating Microphone Icon (Voice Note)
+            createMicIcon();
+
+            // 6. Floating Coins
+            createCoins();
+
+            // 7. Background Particles
+            createParticles();
+
+            // 8. Glowing Grid Floor
+            createGridFloor();
+
+            // Once loaded, swap fallback image with 3D canvas
+            mockupContainer.classList.add('webgl-active');
+        }
+
+        // Create Canvas-based Telegram Chat Texture
+        function createTelegramChatTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 1024;
+            const ctx = canvas.getContext('2d');
+
+            // Header Background
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(0, 0, 512, 1024);
+
+            // Wallpaper (dark telegraph pattern)
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(0, 120, 512, 904);
+
+            // Top Bar
+            ctx.fillStyle = '#111827';
+            ctx.fillRect(0, 0, 512, 120);
+
+            // Header text
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 36px var(--font-head), sans-serif';
+            ctx.fillText('KasPilot Bot 🤖', 40, 70);
+
+            ctx.fillStyle = '#10b981';
+            ctx.font = '24px var(--font-body), sans-serif';
+            ctx.fillText('● online', 40, 102);
+
+            // Chat Bubbles Drawing Helpers
+            function drawBubble(x, y, w, h, radius, color, isRight) {
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.roundRect(x, y, w, h, radius);
+                ctx.fill();
+                
+                // Draw tiny triangle for bubble tip
+                ctx.beginPath();
+                if (isRight) {
+                    ctx.moveTo(x + w, y + h - 15);
+                    ctx.lineTo(x + w + 12, y + h);
+                    ctx.lineTo(x + w, y + h);
+                } else {
+                    ctx.moveTo(x, y + h - 15);
+                    ctx.lineTo(x - 12, y + h);
+                    ctx.lineTo(x, y + h);
+                }
+                ctx.fill();
+            }
+
+            // Chat Bubble 1: User Text (Left)
+            drawBubble(60, 200, 320, 80, 16, 'rgba(255,255,255,0.08)', false);
+            ctx.fillStyle = '#f3f4f6';
+            ctx.font = '28px var(--font-body), sans-serif';
+            ctx.fillText('Beli kopi 25rb', 80, 250);
+
+            // Chat Bubble 2: Bot Response (Right)
+            drawBubble(100, 310, 350, 110, 16, '#6366f1', true);
+            ctx.fillStyle = '#ffffff';
+            ctx.fillText('✅ Transaksi dicatat!', 120, 360);
+            ctx.fillStyle = '#c7d2fe';
+            ctx.font = '24px var(--font-body), sans-serif';
+            ctx.fillText('Kopi: Rp25.000 (Pengeluaran)', 120, 395);
+
+            // Chat Bubble 3: User Voice Note (Left)
+            drawBubble(60, 465, 300, 90, 16, 'rgba(255,255,255,0.08)', false);
+            ctx.fillStyle = '#818cf8';
+            ctx.fillText('🎙️ Voice Note (0:04)', 80, 520);
+
+            // Chat Bubble 4: Bot Voice Note processed (Right)
+            drawBubble(80, 585, 370, 110, 16, '#6366f1', true);
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '28px var(--font-body), sans-serif';
+            ctx.fillText('🎙️ Transkrip: "Beli bensin..."', 100, 635);
+            ctx.fillStyle = '#c7d2fe';
+            ctx.font = '24px var(--font-body), sans-serif';
+            ctx.fillText('Bensin: Rp35.000 dicatat!', 100, 670);
+
+            // Chat Bubble 5: User Photo Struk (Left)
+            drawBubble(60, 735, 280, 120, 16, 'rgba(255,255,255,0.08)', false);
+            ctx.fillStyle = '#9ca3af';
+            ctx.font = '24px var(--font-body), sans-serif';
+            ctx.fillText('📷 Mengirim foto struk', 80, 785);
+            ctx.fillText('belanja...', 80, 815);
+
+            // Chat Bubble 6: Bot Image Read (Right)
+            drawBubble(100, 885, 350, 100, 16, '#10b981', true);
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '28px var(--font-body), sans-serif';
+            ctx.fillText('📸 Struk dibaca oleh AI!', 120, 935);
+            ctx.fillStyle = '#a7f3d0';
+            ctx.font = '24px var(--font-body), sans-serif';
+            ctx.fillText('Total Rp145.000 dicatat!', 120, 965);
+
+            return new THREE.CanvasTexture(canvas);
+        }
+
+        function createTelegramPhone() {
+            const phoneW = 1.6;
+            const phoneH = 3.2;
+            const phoneD = 0.08;
+
+            // Phone Body
+            const bodyGeo = new THREE.BoxGeometry(phoneW, phoneH, phoneD);
+            const bodyMat = new THREE.MeshPhysicalMaterial({
+                color: 0x0f172a,
+                metalness: 0.9,
+                roughness: 0.15,
+                clearcoat: 1.0,
+                clearcoatRoughness: 0.1
+            });
+            const phoneBody = new THREE.Mesh(bodyGeo, bodyMat);
+            phoneBody.castShadow = true;
+            phoneBody.receiveShadow = true;
+
+            // Phone Screen
+            const screenGeo = new THREE.PlaneGeometry(phoneW - 0.08, phoneH - 0.12);
+            const chatTexture = createTelegramChatTexture();
+            const screenMat = new THREE.MeshBasicMaterial({
+                map: chatTexture,
+                side: THREE.FrontSide
+            });
+            const phoneScreen = new THREE.Mesh(screenGeo, screenMat);
+            phoneScreen.position.z = phoneD / 2 + 0.002;
+
+            phoneMesh = new THREE.Group();
+            phoneMesh.add(phoneBody);
+            phoneMesh.add(phoneScreen);
+
+            // Position on bottom-right, tilted forward & facing camera slightly
+            phoneMesh.position.set(2.6, -0.6, 0.7);
+            phoneMesh.rotation.set(-0.1, -0.3, 0.05);
+            mainGroup.add(phoneMesh);
+
+            floatingObjects.push({
+                mesh: phoneMesh,
+                baseY: -0.6,
+                speed: 1.6,
+                amplitude: 0.09,
+                rotSpeedX: 0.06,
+                rotSpeedY: 0.08,
+                offset: Math.PI / 3
+            });
+        }
+
+        function createSheetsCard() {
+            const cardW = 0.9;
+            const cardH = 0.9;
+            const cardD = 0.04;
+
+            const cardGeo = new THREE.BoxGeometry(cardW, cardH, cardD);
+            
+            // Draw Google Sheets Logo on canvas for texture
+            const canvas = document.createElement('canvas');
+            canvas.width = 128;
+            canvas.height = 128;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#047857';
+            ctx.fillRect(0, 0, 128, 128);
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 6;
+            ctx.strokeRect(20, 20, 88, 88);
+            ctx.beginPath();
+            ctx.moveTo(20, 50); ctx.lineTo(108, 50);
+            ctx.moveTo(20, 80); ctx.lineTo(108, 80);
+            ctx.moveTo(50, 20); ctx.lineTo(50, 108);
+            ctx.moveTo(80, 20); ctx.lineTo(80, 108);
+            ctx.stroke();
+
+            const texture = new THREE.CanvasTexture(canvas);
+            const mat = new THREE.MeshPhysicalMaterial({
+                color: 0x10b981,
+                roughness: 0.2,
+                metalness: 0.1,
+                emissive: 0x047857,
+                emissiveIntensity: 0.2,
+                clearcoat: 0.8
+            });
+            
+            const faceGeo = new THREE.PlaneGeometry(cardW - 0.08, cardH - 0.08);
+            const faceMat = new THREE.MeshBasicMaterial({ map: texture, side: THREE.FrontSide });
+            const cardFace = new THREE.Mesh(faceGeo, faceMat);
+            cardFace.position.z = cardD / 2 + 0.001;
+
+            const cardBody = new THREE.Mesh(cardGeo, mat);
+            cardBody.castShadow = true;
+
+            sheetsCard = new THREE.Group();
+            sheetsCard.add(cardBody);
+            sheetsCard.add(cardFace);
+
+            sheetsCard.position.set(-2.8, 1.3, 0.5);
+            sheetsCard.rotation.set(0.15, 0.2, -0.1);
+            mainGroup.add(sheetsCard);
+
+            floatingObjects.push({
+                mesh: sheetsCard,
+                baseY: 1.3,
+                speed: 0.9,
+                amplitude: 0.1,
+                rotSpeedX: 0.1,
+                rotSpeedY: 0.15,
+                offset: Math.PI / 1.5
+            });
+        }
+
+        function createPaperPlane() {
+            const shape = new THREE.Shape();
+            shape.moveTo(0, 0.5);
+            shape.lineTo(-0.4, -0.3);
+            shape.lineTo(-0.08, -0.15);
+            shape.lineTo(0, -0.4);
+            shape.lineTo(0.08, -0.15);
+            shape.lineTo(0.4, -0.3);
+            shape.closePath();
+
+            const extrudeSettings = {
+                depth: 0.03,
+                bevelEnabled: true,
+                bevelSegments: 2,
+                steps: 1,
+                bevelSize: 0.01,
+                bevelThickness: 0.01
+            };
+
+            const geo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+            const mat = new THREE.MeshPhysicalMaterial({
+                color: 0x38bdf8,
+                metalness: 0.5,
+                roughness: 0.2,
+                emissive: 0x0284c7,
+                emissiveIntensity: 0.6,
+                clearcoat: 1.0
+            });
+
+            telegramPlane = new THREE.Mesh(geo, mat);
+            telegramPlane.castShadow = true;
+            
+            telegramPlane.position.set(2.4, 1.4, 0.6);
+            telegramPlane.rotation.set(-0.2, -0.3, 0.5);
+            mainGroup.add(telegramPlane);
+
+            floatingObjects.push({
+                mesh: telegramPlane,
+                baseY: 1.4,
+                speed: 1.4,
+                amplitude: 0.08,
+                rotSpeedX: 0.05,
+                rotSpeedY: 0.1,
+                offset: Math.PI / 2
+            });
+        }
+
+        function createMicIcon() {
+            const micGroup = new THREE.Group();
+
+            const headGeo = new THREE.SphereGeometry(0.18, 16, 16);
+            const headMat = new THREE.MeshPhysicalMaterial({
+                color: 0x818cf8,
+                roughness: 0.1,
+                metalness: 0.9,
+                emissive: 0x4f46e5,
+                emissiveIntensity: 0.5
+            });
+            const head = new THREE.Mesh(headGeo, headMat);
+            head.position.y = 0.15;
+            micGroup.add(head);
+
+            const bodyGeo = new THREE.CylinderGeometry(0.12, 0.12, 0.35, 16);
+            const body = new THREE.Mesh(bodyGeo, headMat);
+            body.position.y = -0.05;
+            micGroup.add(body);
+
+            const standGeo = new THREE.TorusGeometry(0.24, 0.05, 8, 24, Math.PI);
+            const standMat = new THREE.MeshPhysicalMaterial({
+                color: 0x64748b,
+                metalness: 0.8,
+                roughness: 0.3
+            });
+            const stand = new THREE.Mesh(standGeo, standMat);
+            stand.position.y = -0.1;
+            stand.rotation.x = Math.PI / 2;
+            micGroup.add(stand);
+
+            const baseConnectorGeo = new THREE.CylinderGeometry(0.04, 0.04, 0.15, 8);
+            const baseConnector = new THREE.Mesh(baseConnectorGeo, standMat);
+            baseConnector.position.y = -0.22;
+            micGroup.add(baseConnector);
+
+            const baseGeo = new THREE.CylinderGeometry(0.18, 0.18, 0.04, 16);
+            const base = new THREE.Mesh(baseGeo, standMat);
+            base.position.y = -0.3;
+            micGroup.add(base);
+
+            const ringGeo = new THREE.TorusGeometry(0.48, 0.02, 4, 32);
+            const ringMat = new THREE.MeshBasicMaterial({
+                color: 0x818cf8,
+                transparent: true,
+                opacity: 0.3
+            });
+            const waveRing = new THREE.Mesh(ringGeo, ringMat);
+            waveRing.rotation.x = Math.PI / 2;
+            micGroup.add(waveRing);
+
+            micIcon = micGroup;
+            micIcon.position.set(-2.5, -0.9, 0.6);
+            micIcon.rotation.set(0.2, 0.4, -0.15);
+            mainGroup.add(micIcon);
+
+            floatingObjects.push({
+                mesh: micIcon,
+                baseY: -0.9,
+                speed: 1.1,
+                amplitude: 0.1,
+                rotSpeedX: 0.08,
+                rotSpeedY: 0.06,
+                offset: Math.PI / 4
+            });
+        }
+
+        function createCoins() {
+            const coinGeo = new THREE.CylinderGeometry(0.18, 0.18, 0.04, 24);
+            const coinMat = new THREE.MeshPhysicalMaterial({
+                color: 0xf59e0b,
+                metalness: 0.9,
+                roughness: 0.1,
+                clearcoat: 1.0
+            });
+
+            const coin1 = new THREE.Mesh(coinGeo, coinMat);
+            coin1.position.set(-1.6, 1.4, 0.8);
+            coin1.rotation.set(Math.PI / 4, Math.PI / 6, 0);
+            coin1.castShadow = true;
+            mainGroup.add(coin1);
+
+            floatingObjects.push({
+                mesh: coin1,
+                baseY: 1.4,
+                speed: 2.0,
+                amplitude: 0.06,
+                rotSpeedX: 0.2,
+                rotSpeedY: 0.3,
+                offset: Math.PI * 0.1
+            });
+
+            const coin2 = new THREE.Mesh(coinGeo, coinMat);
+            coin2.position.set(1.4, -1.3, 0.9);
+            coin2.rotation.set(-Math.PI / 5, Math.PI / 3, 0.2);
+            coin2.castShadow = true;
+            mainGroup.add(coin2);
+
+            floatingObjects.push({
+                mesh: coin2,
+                baseY: -1.3,
+                speed: 1.8,
+                amplitude: 0.08,
+                rotSpeedX: -0.3,
+                rotSpeedY: 0.2,
+                offset: Math.PI * 0.7
+            });
+        }
+
+        function createParticles() {
+            const count = 120;
+            const geo = new THREE.BufferGeometry();
+            const positions = new Float32Array(count * 3);
+
+            for (let i = 0; i < count; i++) {
+                positions[i * 3] = (Math.random() - 0.5) * 12;
+                positions[i * 3 + 1] = (Math.random() - 0.5) * 8;
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 6 - 2;
+            }
+
+            geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+            const mat = new THREE.PointsMaterial({
+                color: 0x818cf8,
+                size: 0.04,
+                transparent: true,
+                opacity: 0.5,
+                sizeAttenuation: true
+            });
+
+            const starfield = new THREE.Points(geo, mat);
+            scene.add(starfield);
+            
+            floatingObjects.push({
+                mesh: starfield,
+                baseY: 0,
+                speed: 0.2,
+                amplitude: 0,
+                rotSpeedX: 0.01,
+                rotSpeedY: 0.015,
+                offset: 0
+            });
+        }
+
+        function createGridFloor() {
+            const gridHelper = new THREE.GridHelper(16, 24, 0x6366f1, 0x1e293b);
+            gridHelper.position.y = -2.2;
+            gridHelper.position.z = -1;
+            gridHelper.material.opacity = 0.22;
+            gridHelper.material.transparent = true;
+            scene.add(gridHelper);
+        }
+
+        // Mouse Interactive Tilt
+        let mouseX = 0;
+        let mouseY = 0;
+        let targetX = 0;
+        let targetY = 0;
+
+        window.addEventListener('mousemove', function(e) {
+            targetX = ((e.clientX / window.innerWidth) - 0.5) * 2;
+            targetY = ((e.clientY / window.innerHeight) - 0.5) * 2;
+        });
+
+        // Handle Resize
+        window.addEventListener('resize', function() {
+            width = container.clientWidth;
+            height = container.clientHeight || 520;
+            
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            
+            renderer.setSize(width, height);
+        });
+
+        // Scroll trigger tilt logic
+        let scrollPercent = 0;
+        window.addEventListener('scroll', function() {
+            const scrollTop = window.scrollY || document.documentElement.scrollTop;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            scrollPercent = docHeight > 0 ? scrollTop / docHeight : 0;
+        });
+
+        // Entrance GSAP Animation
+        mainGroup.scale.set(0.01, 0.01, 0.01);
+        mainGroup.rotation.y = -Math.PI;
+
+        setTimeout(() => {
+            gsap.to(mainGroup.scale, {
+                x: 1,
+                y: 1,
+                z: 1,
+                duration: 1.8,
+                ease: "elastic.out(1, 0.75)"
+            });
+            gsap.to(mainGroup.rotation, {
+                y: 0,
+                duration: 2.0,
+                ease: "power3.out"
+            });
+        }, 300);
+
+        // Render loop
+        const clock = new THREE.Clock();
+
+        function tick() {
+            const elapsedTime = clock.getElapsedTime();
+
+            mouseX += (targetX - mouseX) * 0.05;
+            mouseY += (targetY - mouseY) * 0.05;
+
+            mainGroup.rotation.y = mouseX * 0.25;
+            mainGroup.rotation.x = mouseY * 0.15 + (scrollPercent * 0.4);
+
+            floatingObjects.forEach(obj => {
+                if (obj.amplitude > 0) {
+                    obj.mesh.position.y = obj.baseY + Math.sin(elapsedTime * obj.speed + obj.offset) * obj.amplitude;
+                }
+                if (obj.rotSpeedX) {
+                    obj.mesh.rotation.x += Math.sin(elapsedTime * 0.1) * 0.001 * obj.rotSpeedX;
+                }
+                if (obj.rotSpeedY) {
+                    obj.mesh.rotation.y += Math.sin(elapsedTime * 0.1) * 0.001 * obj.rotSpeedY;
+                }
+            });
+
+            // Spin the coins
+            floatingObjects.forEach(obj => {
+                if (obj.mesh.geometry && obj.mesh.geometry.type === 'CylinderGeometry') {
+                    obj.mesh.rotation.y += 0.015;
+                }
+            });
+
+            renderer.render(scene, camera);
+            requestAnimationFrame(tick);
+        }
+
+        requestAnimationFrame(tick);
+    })();
+
+    // 3D Card Hover Parallax Tilt Effect for Feature Cards
+    (function() {
+        const cards = document.querySelectorAll('.feature-card');
+        
+        cards.forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const xc = rect.width / 2;
+                const yc = rect.height / 2;
+                
+                const angleX = (yc - y) / 14; 
+                const angleY = (x - xc) / 14; 
+                
+                card.style.transform = `perspective(1000px) rotateX(${angleX}deg) rotateY(${angleY}deg) scale3d(1.02, 1.02, 1.02)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+            });
+        });
+    })();
 </script>
 </body>
 </html>
