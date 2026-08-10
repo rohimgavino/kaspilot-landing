@@ -1128,6 +1128,118 @@
         </div>
     </section>
 
+    <!-- Live Bot Simulator Section -->
+    <section id="demo" style="padding: 80px 0; border-top: 1px solid var(--border-color); background: rgba(3, 7, 18, 0.6);">
+        <div class="container">
+            <div class="section-head">
+                <span class="section-tag">Demo Interaktif</span>
+                <h2 class="section-title">Uji Coba Bot Simulator Secara Live</h2>
+                <p class="section-desc">Klik tombol perintah di bawah untuk melihat bagaimana KasPilot mencatat transaksi & mengelola saldo secara instan.</p>
+            </div>
+
+            <div style="max-width: 850px; margin: 0 auto; background: #020617; border: 1px solid var(--border-color); border-radius: 20px; padding: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 14px; margin-bottom: 16px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="width: 40px; height: 40px; border-radius: 50%; background: #4f46e5; color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px;">KP</div>
+                        <div>
+                            <strong style="color: white; font-size: 15px; display: flex; align-items: center; gap: 6px;">KasPilot Bot 🤖 <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981;"></span></strong>
+                            <span style="color: var(--text-secondary); font-size: 12px;">Terhubung ke Google Sheets</span>
+                        </div>
+                    </div>
+                    <span style="background: rgba(16,185,129,0.12); color: #10b981; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 100px; border: 1px solid rgba(16,185,129,0.25);">Live Simulator</span>
+                </div>
+
+                <!-- Chat Box -->
+                <div id="sim-chat-box" style="display: flex; flex-direction: column; gap: 14px; max-height: 380px; overflow-y: auto; padding-right: 8px; margin-bottom: 20px;">
+                    <div style="display: flex; gap: 10px;">
+                        <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(99,102,241,0.2); color: #818cf8; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; shrink: 0;">KP</div>
+                        <div style="background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); padding: 12px 16px; border-radius: 16px; border-top-left-radius: 0; max-width: 85%; font-size: 14px; color: var(--text-primary); line-height: 1.5;">
+                            👋 <strong>Halo Kak! Selamat datang di KasPilot.</strong><br>
+                            Coba klik salah satu sampel perintah di bawah ini untuk melihat simulasi pencatatan otomatis!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Prompt Chips -->
+                <div style="border-top: 1px solid var(--border-color); padding-top: 14px;">
+                    <p style="font-size: 12px; color: var(--text-secondary); font-weight: 600; margin-bottom: 10px;">✨ Klik sampel perintah untuk menguji bot:</p>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        <button onclick="runSimPrompt('gaji')" style="background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); color: var(--text-primary); padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">💵 Gaji masuk 8.5jt BCA</button>
+                        <button onclick="runSimPrompt('jajan')" style="background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); color: var(--text-primary); padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">🍜 25rb jajan padang - Kas Keluarga</button>
+                        <button onclick="runSimPrompt('voice')" style="background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); color: var(--text-primary); padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">🎙️ Voice Note: Beli Bensin 50rb</button>
+                        <button onclick="runSimPrompt('struk')" style="background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); color: var(--text-primary); padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">📸 Scan Struk Shopee Rp 145.000</button>
+                        <button onclick="runSimPrompt('saldo')" style="background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); color: var(--text-primary); padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">💰 /saldo</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Salary Allocation Calculator Section -->
+    <section id="kalkulator" style="padding: 80px 0; border-top: 1px solid var(--border-color);">
+        <div class="container">
+            <div style="max-width: 850px; margin: 0 auto; background: var(--bg-surface); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 20px; padding: 32px; box-shadow: 0 15px 35px rgba(0,0,0,0.4);">
+                <div class="section-head" style="margin-bottom: 24px;">
+                    <span class="section-tag" style="color: #10b981;">Simulasi AI</span>
+                    <h2 class="section-title">Hitung Alokasi Gaji Bulanan</h2>
+                    <p class="section-desc">Tentukan formula alokasi anggaran ideal sebelum menerapkannya di KasPilot.</p>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; align-items: center;">
+                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 6px;">Nominal Gaji / Pemasukan (Rp)</label>
+                            <input type="number" id="sim-calc-salary" value="7500000" oninput="runCalcBudget()" style="width: 100%; border: 1px solid var(--border-color); background: rgba(2, 6, 23, 0.8); color: white; border-radius: 8px; padding: 12px; font-size: 16px; font-weight: 700;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 6px;">Formula Penganggaran</label>
+                            <select id="sim-calc-method" onchange="runCalcBudget()" style="width: 100%; border: 1px solid var(--border-color); background: rgba(2, 6, 23, 0.8); color: white; border-radius: 8px; padding: 12px; font-size: 14px; font-weight: 600;">
+                                <option value="50-30-20">Formula 50/30/20 (Ideal & Seimbang)</option>
+                                <option value="60-20-20">Formula 60/20/20 (Kebutuhan Operasional Tinggi)</option>
+                                <option value="70-20-10">Formula 70/20/10 (Fokus Utang/Cicilan)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="background: #020617; border: 1px solid var(--border-color); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 14px;">
+                        <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 14px; color: white; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">
+                            <span>Hasil Pembagian</span>
+                            <span id="sim-out-method" style="color: #818cf8; font-family: monospace;">50/30/20</span>
+                        </div>
+                        <div>
+                            <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; margin-bottom: 4px;">
+                                <span>🏠 Kebutuhan Wajib</span>
+                                <span id="sim-out-needs" style="color: #818cf8; font-weight: 700;">Rp 3.750.000</span>
+                            </div>
+                            <div style="width: 100%; background: #1e293b; height: 8px; border-radius: 100px; overflow: hidden;">
+                                <div id="sim-bar-needs" style="background: #6366f1; height: 100%; width: 50%; transition: width 0.4s ease;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; margin-bottom: 4px;">
+                                <span>🛍️ Keinginan / Lifestyle</span>
+                                <span id="sim-out-wants" style="color: #c084fc; font-weight: 700;">Rp 2.250.000</span>
+                            </div>
+                            <div style="width: 100%; background: #1e293b; height: 8px; border-radius: 100px; overflow: hidden;">
+                                <div id="sim-bar-wants" style="background: #a855f7; height: 100%; width: 30%; transition: width 0.4s ease;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; margin-bottom: 4px;">
+                                <span>🎯 Tabungan & Investasi</span>
+                                <span id="sim-out-savings" style="color: #34d399; font-weight: 700;">Rp 1.500.000</span>
+                            </div>
+                            <div style="width: 100%; background: #1e293b; height: 8px; border-radius: 100px; overflow: hidden;">
+                                <div id="sim-bar-savings" style="background: #10b981; height: 100%; width: 20%; transition: width 0.4s ease;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
     <!-- How It Works Section -->
     <section class="how-it-works">
         <div class="container">
@@ -2642,5 +2754,109 @@ Saya akan kirim bukti pembayaran di chat ini. Setelah terkonfirmasi, mohon dikir
         });
     })();
 </script>
+
+    <script>
+        function runSimPrompt(type) {
+            const chatBox = document.getElementById('sim-chat-box');
+            if (!chatBox) return;
+            let userMsg = '';
+            let botReplyHtml = '';
+
+            if (type === 'gaji') {
+                userMsg = 'gaji masuk 8.5jt BCA';
+                botReplyHtml = `
+                    <div style="background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); padding: 12px 16px; border-radius: 16px; border-top-left-radius: 0; max-width: 85%; font-size: 13px; color: var(--text-primary); line-height: 1.5;">
+                        ✅ <strong>Pemasukan Berhasil Dicatat!</strong><br><br>
+                        • Nominal: <strong>Rp 8.500.000</strong><br>
+                        • Kategori: <strong>Gaji Utama</strong><br>
+                        • Dompet: <strong>BCA</strong><br><br>
+                        📊 <strong>Sisa Saldo BCA:</strong> Rp 8.500.000
+                    </div>`;
+            } else if (type === 'jajan') {
+                userMsg = '25rb jajan padang - Kas Keluarga';
+                botReplyHtml = `
+                    <div style="background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); padding: 12px 16px; border-radius: 16px; border-top-left-radius: 0; max-width: 85%; font-size: 13px; color: var(--text-primary); line-height: 1.5;">
+                        ✅ <strong>Pengeluaran Berhasil Dicatat!</strong><br><br>
+                        • Nominal: <strong>Rp 25.000</strong><br>
+                        • Kategori: <strong>Makanan & Minuman</strong><br>
+                        • Keterangan: <em>jajan padang</em><br>
+                        • Dompet: <strong>Kas Keluarga</strong><br><br>
+                        ⚠️ <em>Sisa Anggaran Makanan: Rp 1.975.000 (Terpakai 1.2%)</em>
+                    </div>`;
+            } else if (type === 'voice') {
+                userMsg = '🎙️ [Voice Note 0:04] "Beli bensin lima puluh ribu rupiah"';
+                botReplyHtml = `
+                    <div style="background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); padding: 12px 16px; border-radius: 16px; border-top-left-radius: 0; max-width: 85%; font-size: 13px; color: var(--text-primary); line-height: 1.5;">
+                        🤖 <em>AI Transkrip: "Beli bensin lima puluh ribu rupiah"</em><br><br>
+                        ✅ <strong>Pengeluaran Berhasil Dicatat!</strong><br>
+                        • Nominal: <strong>Rp 50.000</strong><br>
+                        • Kategori: <strong>Transportasi</strong><br>
+                        • Dompet: <strong>Cash</strong>
+                    </div>`;
+            } else if (type === 'struk') {
+                userMsg = '📸 [Foto Struk Belanja Shopee.jpg]';
+                botReplyHtml = `
+                    <div style="background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); padding: 12px 16px; border-radius: 16px; border-top-left-radius: 0; max-width: 85%; font-size: 13px; color: var(--text-primary); line-height: 1.5;">
+                        🤖 <em>AI Gemini Vision Processing Complete!</em><br><br>
+                        🧾 <strong>Merchant: Shopee Supermarket</strong><br>
+                        • Total Belanja: <strong>Rp 145.000</strong><br>
+                        • Kategori: <strong>Belanja Dapur</strong><br>
+                        • Dompet: <strong>ShopeePay</strong><br><br>
+                        <em>Transaksi otomatis masuk ke Google Sheets!</em>
+                    </div>`;
+            } else if (type === 'saldo') {
+                userMsg = '/saldo';
+                botReplyHtml = `
+                    <div style="background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); padding: 12px 16px; border-radius: 16px; border-top-left-radius: 0; max-width: 85%; font-size: 13px; color: var(--text-primary); font-family: monospace; line-height: 1.5;">
+                        💰 <strong>RINGKASAN SALDO DOMPET:</strong><br><br>
+                        🏦 BCA: Rp 8.500.000<br>
+                        📱 DANA: Rp 750.000<br>
+                        💳 ShopeePay: Rp 355.000<br>
+                        👨‍👩‍👧 Kas Keluarga: Rp 1.975.000<br>
+                        💵 Cash: Rp 450.000<br>
+                        -----------------------------<br>
+                        💎 <strong>TOTAL DANA: Rp 12.030.000</strong>
+                    </div>`;
+            }
+
+            const userElem = document.createElement('div');
+            userElem.style.display = 'flex';
+            userElem.style.justifyContent = 'flex-end';
+            userElem.innerHTML = `<div style="background: #4f46e5; color: white; padding: 10px 14px; border-radius: 16px; border-top-right-radius: 0; font-size: 13px; max-width: 80%;">${userMsg}</div>`;
+            chatBox.appendChild(userElem);
+
+            setTimeout(() => {
+                const botElem = document.createElement('div');
+                botElem.style.display = 'flex';
+                botElem.style.gap = '10px';
+                botElem.innerHTML = `<div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(99,102,241,0.2); color: #818cf8; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; shrink: 0;">KP</div>` + botReplyHtml;
+                chatBox.appendChild(botElem);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 350);
+        }
+
+        function runCalcBudget() {
+            const salary = parseFloat(document.getElementById('sim-calc-salary').value) || 0;
+            const method = document.getElementById('sim-calc-method').value;
+            
+            let nPct = 0.50, wPct = 0.30, sPct = 0.20;
+            if (method === '60-20-20') { nPct = 0.60; wPct = 0.20; sPct = 0.20; }
+            if (method === '70-20-10') { nPct = 0.70; wPct = 0.20; sPct = 0.10; }
+
+            const needs = salary * nPct;
+            const wants = salary * wPct;
+            const savings = salary * sPct;
+
+            if (document.getElementById('sim-out-method')) document.getElementById('sim-out-method').innerText = method.replace(/-/g, '/');
+            if (document.getElementById('sim-out-needs')) document.getElementById('sim-out-needs').innerText = 'Rp ' + needs.toLocaleString('id-ID');
+            if (document.getElementById('sim-out-wants')) document.getElementById('sim-out-wants').innerText = 'Rp ' + wants.toLocaleString('id-ID');
+            if (document.getElementById('sim-out-savings')) document.getElementById('sim-out-savings').innerText = 'Rp ' + savings.toLocaleString('id-ID');
+
+            if (document.getElementById('sim-bar-needs')) document.getElementById('sim-bar-needs').style.width = (nPct * 100) + '%';
+            if (document.getElementById('sim-bar-wants')) document.getElementById('sim-bar-wants').style.width = (wPct * 100) + '%';
+            if (document.getElementById('sim-bar-savings')) document.getElementById('sim-bar-savings').style.width = (sPct * 100) + '%';
+        }
+    </script>
+
 </body>
 </html>
