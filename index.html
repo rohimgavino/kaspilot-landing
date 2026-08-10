@@ -1038,6 +1038,25 @@
             }
         }
     </style>
+
+        /* Laser Scan Line Animation from promo_demo.html */
+        .laser-line {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #06b6d4, #a855f7, #06b6d4, transparent);
+            box-shadow: 0 0 15px #06b6d4, 0 0 25px #a855f7;
+            animation: scan 2s infinite ease-in-out;
+        }
+
+        @keyframes scan {
+            0% { top: 5%; opacity: 0; }
+            15% { opacity: 1; }
+            85% { opacity: 1; }
+            100% { top: 90%; opacity: 0; }
+        }
+
 </head>
 <body>
 
@@ -1129,51 +1148,139 @@
     </section>
 
     <!-- Live Bot Simulator Section -->
-    <section id="demo" style="padding: 80px 0; border-top: 1px solid var(--border-color); background: rgba(3, 7, 18, 0.6);">
+    
+    <!-- Live Motion Simulator & Video Demo Section -->
+    <section id="demo" style="padding: 80px 0; border-top: 1px solid var(--border-color); background: rgba(3, 7, 18, 0.7); position: relative;">
         <div class="container">
-            <div class="section-head">
-                <span class="section-tag">Demo Interaktif</span>
-                <h2 class="section-title">Uji Coba Bot Simulator Secara Live</h2>
-                <p class="section-desc">Klik tombol perintah di bawah untuk melihat bagaimana KasPilot mencatat transaksi & mengelola saldo secara instan.</p>
+            <div class="section-head" style="margin-bottom: 32px;">
+                <span class="section-tag" style="color: #a855f7;">Interactive Video Demo & Motion Simulator</span>
+                <h2 class="section-title">Lihat Bagaimana KasPilot Bekerja Secara Live</h2>
+                <p class="section-desc">Tekan tombol <strong>"Putar Simulasi Otomatis"</strong> di bawah untuk melihat animasi transaksi teks, scan struk dengan AI Gemini, dan peningatan otomatis tabungan impian!</p>
             </div>
 
-            <div style="max-width: 850px; margin: 0 auto; background: #020617; border: 1px solid var(--border-color); border-radius: 20px; padding: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
-                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 14px; margin-bottom: 16px;">
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: #4f46e5; color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px;">KP</div>
-                        <div>
-                            <strong style="color: white; font-size: 15px; display: flex; align-items: center; gap: 6px;">KasPilot Bot 🤖 <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981;"></span></strong>
-                            <span style="color: var(--text-secondary); font-size: 12px;">Terhubung ke Google Sheets</span>
+            <!-- Header Action Controls -->
+            <div style="display: flex; justify-content: center; gap: 12px; margin-bottom: 24px; flex-wrap: wrap;">
+                <button onclick="startAutoDemo()" style="background: linear-gradient(135deg, #8b5cf6, #6366f1); color: white; padding: 12px 24px; border-radius: 12px; font-weight: 700; font-size: 14px; border: none; cursor: pointer; display: flex; items-center; gap: 8px; box-shadow: 0 4px 20px rgba(139,92,246,0.4); transition: all 0.3s;">
+                    ▶️ Putar Simulasi Otomatis
+                </button>
+                <button onclick="resetDemo()" style="background: rgba(255,255,255,0.08); border: 1px solid var(--border-color); color: white; padding: 12px 20px; border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer; transition: all 0.3s;">
+                    🔄 Reset Simulasi
+                </button>
+                <a href="promo_demo.html" target="_blank" style="background: rgba(6,182,212,0.15); border: 1px solid rgba(6,182,212,0.4); color: #06b6d4; padding: 12px 20px; border-radius: 12px; font-weight: 700; font-size: 14px; text-decoration: none; display: flex; items-center; gap: 8px; transition: all 0.3s;">
+                    📺 Buka Mode Fullscreen Video Rekam Screen
+                </a>
+            </div>
+
+            <div style="max-width: 1050px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; align-items: start;">
+                
+                <!-- LEFT: TELEGRAM BOT PHONE SIMULATOR -->
+                <div style="background: #020617; border: 1px solid var(--border-color); border-radius: 28px; padding: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.6); position: relative; overflow: hidden;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 14px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #a855f7, #6366f1); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 15px;">KP</div>
+                            <div>
+                                <strong style="color: white; font-size: 14px; display: flex; align-items: center; gap: 6px;">KasPilot Bot 🤖 <span style="width: 7px; height: 7px; border-radius: 50%; background: #10b981;"></span></strong>
+                                <span style="color: var(--text-secondary); font-size: 11px;">Terhubung ke Google Sheets</span>
+                            </div>
+                        </div>
+                        <span style="background: rgba(168,85,247,0.15); color: #c084fc; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 100px; border: 1px solid rgba(168,85,247,0.3);">Online AI</span>
+                    </div>
+
+                    <!-- Scanning Modal Overlay (Hidden by default) -->
+                    <div id="scanOverlay" style="display: none; position: absolute; inset: 0; background: rgba(2, 6, 23, 0.92); backdrop-filter: blur(8px); z-index: 30; flex-direction: column; align-items: center; justify-content: center; padding: 20px;">
+                        <div style="position: relative; width: 190px; height: 250px; border-radius: 16px; overflow: hidden; border: 2px solid rgba(6,182,212,0.6); box-shadow: 0 0 30px rgba(6,182,212,0.3);">
+                            <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=400&q=80" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.85;" alt="Struk Belanja">
+                            <div class="laser-line"></div>
+                        </div>
+                        <div style="margin-top: 14px; text-align: center;">
+                            <p style="font-size: 13px; font-weight: 800; color: #06b6d4; display: flex; align-items: center; gap: 6px; justify-content: center;">
+                                ✨ AI Reading Receipt Struk...
+                            </p>
+                            <p style="font-size: 11px; color: var(--text-secondary); margin-top: 4px;">Mengekstrak nominal total & kategori toko</p>
                         </div>
                     </div>
-                    <span style="background: rgba(16,185,129,0.12); color: #10b981; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 100px; border: 1px solid rgba(16,185,129,0.25);">Live Simulator</span>
-                </div>
 
-                <!-- Chat Box -->
-                <div id="sim-chat-box" style="display: flex; flex-direction: column; gap: 14px; max-height: 380px; overflow-y: auto; padding-right: 8px; margin-bottom: 20px;">
-                    <div style="display: flex; gap: 10px;">
-                        <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(99,102,241,0.2); color: #818cf8; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; shrink: 0;">KP</div>
-                        <div style="background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); padding: 12px 16px; border-radius: 16px; border-top-left-radius: 0; max-width: 85%; font-size: 14px; color: var(--text-primary); line-height: 1.5;">
-                            👋 <strong>Halo Kak! Selamat datang di KasPilot.</strong><br>
-                            Coba klik salah satu sampel perintah di bawah ini untuk melihat simulasi pencatatan otomatis!
+                    <!-- Chat Container -->
+                    <div id="sim-chat-box" style="display: flex; flex-direction: column; gap: 12px; min-height: 340px; max-height: 360px; overflow-y: auto; padding-right: 6px; margin-bottom: 16px;">
+                        <div style="display: flex; gap: 10px;">
+                            <div style="width: 30px; height: 30px; border-radius: 50%; background: rgba(99,102,241,0.2); color: #818cf8; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; shrink: 0;">KP</div>
+                            <div style="background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); padding: 10px 14px; border-radius: 14px; border-top-left-radius: 0; max-width: 85%; font-size: 13px; color: var(--text-primary); line-height: 1.5;">
+                                👋 <strong>Halo Kak! Selamat datang di KasPilot.</strong><br>
+                                Kirim pesan teks, foto struk, atau voice note untuk mulai mencatat transaksi!
+                            </div>
+                        </div>
+                        <div id="dynamicMessages"></div>
+                    </div>
+
+                    <!-- Input placeholder -->
+                    <div style="background: rgba(255,255,255,0.04); border: 1px solid var(--border-color); border-radius: 12px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--text-secondary);">
+                        <span id="inputTextPlaceholder">Ketik transaksi...</span>
+                        <span style="color: #c084fc;">🎙️</span>
+                    </div>
+
+                    <!-- Quick Prompt Chips -->
+                    <div style="border-top: 1px solid var(--border-color); margin-top: 12px; padding-top: 10px;">
+                        <p style="font-size: 11px; color: var(--text-secondary); font-weight: 600; margin-bottom: 8px;">Uji coba manual:</p>
+                        <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                            <button onclick="runSimPrompt('gaji')" style="background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); color: var(--text-primary); padding: 6px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer;">💵 Gaji 8.5jt BCA</button>
+                            <button onclick="runSimPrompt('jajan')" style="background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); color: var(--text-primary); padding: 6px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer;">🍜 25rb jajan padang</button>
+                            <button onclick="runSimPrompt('struk')" style="background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); color: var(--text-primary); padding: 6px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer;">📸 Scan Struk</button>
+                            <button onclick="runSimPrompt('saldo')" style="background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); color: var(--text-primary); padding: 6px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer;">💰 /saldo</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Prompt Chips -->
-                <div style="border-top: 1px solid var(--border-color); padding-top: 14px;">
-                    <p style="font-size: 12px; color: var(--text-secondary); font-weight: 600; margin-bottom: 10px;">✨ Klik sampel perintah untuk menguji bot:</p>
-                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-                        <button onclick="runSimPrompt('gaji')" style="background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); color: var(--text-primary); padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">💵 Gaji masuk 8.5jt BCA</button>
-                        <button onclick="runSimPrompt('jajan')" style="background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); color: var(--text-primary); padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">🍜 25rb jajan padang - Kas Keluarga</button>
-                        <button onclick="runSimPrompt('voice')" style="background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); color: var(--text-primary); padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">🎙️ Voice Note: Beli Bensin 50rb</button>
-                        <button onclick="runSimPrompt('struk')" style="background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); color: var(--text-primary); padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">📸 Scan Struk Shopee Rp 145.000</button>
-                        <button onclick="runSimPrompt('saldo')" style="background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); color: var(--text-primary); padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">💰 /saldo</button>
+                <!-- RIGHT: REALTIME DASHBOARD SYNC WIDGETS -->
+                <div style="display: flex; flex-direction: column; gap: 16px;">
+                    <!-- Balance Summary Cards -->
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+                        <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border-color); padding: 16px; border-radius: 16px;">
+                            <span style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">Kas Keluarga</span>
+                            <h4 id="saldoKeluarga" style="font-size: 20px; font-weight: 800; color: #34d399; margin-top: 4px; transition: all 0.4s;">Rp 8.450.000</h4>
+                            <span style="font-size: 10px; color: #10b981; font-weight: 600;">🟢 Surplus Terjaga</span>
+                        </div>
+                        <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border-color); padding: 16px; border-radius: 16px;">
+                            <span style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">Total Pengeluaran</span>
+                            <h4 id="totalKeluar" style="font-size: 20px; font-weight: 800; color: #f43f5e; margin-top: 4px; transition: all 0.4s;">Rp 2.150.000</h4>
+                            <span style="font-size: 10px; color: #f43f5e; font-weight: 600;">🔴 12 Transaksi Bulan Ini</span>
+                        </div>
+                    </div>
+
+                    <!-- Glassmorphic Saving Goal Widget -->
+                    <div style="background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(99,102,241,0.35); padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); position: relative; overflow: hidden;">
+                        <div style="position: absolute; right: -20px; top: -20px; width: 90px; height: 90px; background: rgba(99,102,241,0.15); border-radius: 50%; filter: blur(20px);"></div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; position: relative; z-index: 10;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="font-size: 24px;">🎯</span>
+                                <div>
+                                    <h4 style="font-weight: 800; font-size: 15px; color: #a5b4fc;">Tabungan Impian (Mobil Cash)</h4>
+                                    <p style="font-size: 11px; color: var(--text-secondary);">Target: Rp 150.000.000</p>
+                                </div>
+                            </div>
+                            <span id="targetPercent" style="font-size: 22px; font-weight: 900; color: #06b6d4;">45%</span>
+                        </div>
+                        <div style="width: 100%; background: #020617; height: 14px; border-radius: 100px; padding: 2px; border: 1px solid var(--border-color); overflow: hidden; margin-bottom: 8px;">
+                            <div id="targetProgressBar" style="background: linear-gradient(90deg, #6366f1, #a855f7, #06b6d4); height: 100%; border-radius: 100px; width: 45%; transition: width 1s ease-in-out; box-shadow: 0 0 15px rgba(6,182,212,0.6);"></div>
+                        </div>
+                        <p id="targetSubtext" style="font-size: 11px; color: var(--text-secondary);">Terkumpul: <strong style="color: #a5b4fc;">Rp 67.500.000</strong> dari total target</p>
+                    </div>
+
+                    <!-- Category Budget Gauge -->
+                    <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border-color); padding: 16px; border-radius: 16px; display: flex; flex-direction: column; gap: 8px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
+                            <span style="font-weight: 700; color: white;">📊 Status Anggaran Makanan & Minuman</span>
+                            <span id="budgetBadge" style="background: rgba(16,185,129,0.2); color: #10b981; font-weight: 700; font-size: 10px; padding: 2px 8px; border-radius: 4px;">Aman (58%)</span>
+                        </div>
+                        <div style="width: 100%; background: #020617; height: 8px; border-radius: 100px; overflow: hidden;">
+                            <div id="budgetBar" style="background: #10b981; height: 100%; width: 58%; transition: width 0.7s ease;"></div>
+                        </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </section>
+
 
     <!-- Interactive Salary Allocation Calculator Section -->
     <section id="kalkulator" style="padding: 80px 0; border-top: 1px solid var(--border-color);">
